@@ -84,7 +84,7 @@ main{padding:0 var(--pad) 90px;transition:margin-right .2s}
 .spine.lean.sel{transform:rotate(-7deg) translateY(-14px)}
 .spine.todo{filter:saturate(.75) brightness(.97)}
 .spine::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(0,0,0,.24),rgba(0,0,0,0) 14%,rgba(255,255,255,.06) 40%,rgba(0,0,0,0) 80%,rgba(0,0,0,.2))}
-.spine img{display:block;width:100%;height:100%;object-fit:fill;user-select:none}
+.spine img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:fill;user-select:none}
 .spine.text{color:var(--sp-ink,#fff)}
 .spine.text::before{content:"";position:absolute;left:0;right:0;bottom:0;height:11%;background:rgba(255,255,255,.15)}
 .spine.text .t{position:absolute;left:50%;top:13px;transform-origin:0 0;transform:rotate(90deg) translateY(-50%);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:var(--serif);line-height:1.1;text-align:left}
@@ -323,12 +323,14 @@ progress{width:100%;height:10px;accent-color:var(--accent)}
   <header><h2>표지·책등 일괄 연결</h2><button class="x" aria-label="닫기" type="button" data-close>×</button></header>
   <div class="bd">
     <p class="hint" id="link-hint"></p>
+    <div class="addstat"><label><input type="checkbox" id="link-redo">이미 연결된 책도 YES24 정보로 다시 채우기</label></div>
     <progress id="link-prog" value="0" max="1" hidden></progress>
     <div class="log" id="link-log"></div>
   </div>
   <footer><span class="hint" id="link-count"></span><span class="sp"></span><button type="button" class="btn primary" id="link-go">시작</button></footer>
 </form></dialog>
 
+<script src="config.js"></script>
 <script>
 'use strict';
 /* ════════════════ 기본 도구 ════════════════ */
@@ -349,11 +351,9 @@ function toast(msg, ms = 2600) { const t = $('#toast'); t.textContent = msg; t.c
 /* ════════════════ 상태 ════════════════ */
 const LS = { conn: 'readlog.conn', cache: 'readlog.cache', scale: 'readlog.scale', sort: 'readlog.sort', demo: 'readlog.demo' };
 
-/* ▼ 여기에 앱스 스크립트 웹앱 주소를 붙여넣으세요 (따옴표는 그대로 두세요).
-     예) const PRESET_URL = '';
-   채워두면 새 브라우저에서는 접근 암호만 입력하면 됩니다. 비워두면 주소도 직접 입력해요. */
-const PRESET_URL = 'https://script.google.com/macros/s/AKfycbzcXyF1LUi1_gMa1sULCYcQpGIR4ViJcK5RZqUfbkOgVhMcS1xL54hW3zuA5Ckl0X-tmg/exec';
-/* ▲ 접근 암호는 파일에 넣지 마세요. 브라우저마다 한 번씩만 입력해요. */
+/* 웹앱 주소는 index.html과 같은 폴더의 config.js에서 읽어요. (config.js가 없거나 비어 있으면 화면에서 직접 입력해요)
+   접근 암호는 파일에 넣지 마세요. 브라우저마다 한 번씩만 입력해요. */
+const PRESET_URL = String((window.READLOG_CONFIG && window.READLOG_CONFIG.url) || '').trim();
 const STATUSES = ['읽을 책', '읽는 중', '완독', '중단'];
 const SPINE_MIN_RATIO = 3.5;   // 책등 사진은 세로가 가로의 3.5배 이상으로 길어요 (없을 때 오는 '이미지 준비중' 그림은 이보다 훨씬 뚱뚱해요)
 const DEFAULT_H_MM = 225;
@@ -536,7 +536,10 @@ function geom(b) {
   if (b.faceOut && b.cover) return { H, W: Math.round(H * 0.68), mode: 'cover' };
   const img = spineUrl(b);
   if (img && !(state.badSpine.has(b.id) && !b.ownSpine)) {
-    return { H, W: Math.max(13, Math.round(H * (b.spineAspect || 0.09))), mode: 'img', img };
+    // 두께는 쪽수(또는 YES24가 준 실제 두께)를 기준으로 정해요. 쪽수 정보가 없으면 사진 비율을 써요.
+    const nat = Math.max(13, Math.round(H * (b.spineAspect || 0.09)));
+    const byPages = (b.pages > 0 || (b.thicknessMm >= 6 && b.thicknessMm <= 70)) ? Math.round(thickMm(b) * s) : nat;
+    return { H, W: clamp(byPages, Math.round(nat * 0.5), Math.round(nat * 2.4)), mode: 'img', img };
   }
   return { H, W: Math.max(15, Math.round(thickMm(b) * s)), mode: 'text' };
 }
@@ -544,7 +547,7 @@ function spineHTML(b, g, { lean = true, sel = true } = {}) {
   const isLean = lean && b.status === '읽는 중';
   const cls = ['spine', g.mode, isLean && 'lean', b.status === '읽을 책' && 'todo', sel && state.selected === b.id && 'sel'].filter(Boolean).join(' ');
   let style = `width:${g.W}px;height:${g.H}px;`;
-  if (isLean) style += `margin-right:${Math.round(g.H * 0.12)}px;`;
+  if (isLean) style += `margin-left:${Math.round(g.H * 0.125)}px;`;   // 왼쪽 책에 기대도록, 기울어진 만큼 오른쪽으로 비켜 꽂아요
   let inner = '';
   if (g.mode === 'img') inner = `<img src="${esc(g.img)}" alt="" referrerpolicy="no-referrer" draggable="false" data-mode="spine">`;
   else if (g.mode === 'cover') inner = `<img src="${esc(b.cover)}" alt="" referrerpolicy="no-referrer" draggable="false" data-mode="cover">`;
@@ -591,16 +594,18 @@ function renderShelf() {
   const list = visibleBooks();
   if (!list.length) { host.innerHTML = '<p class="empty">조건에 맞는 책이 없어요.</p>'; return; }
   const avail = host.clientWidth - 2 * 28;
+  // 읽는 중인 책을 기울이는 건 "전체" 보기에서 몇 권 안 될 때만. 전부 기울어 보이면 어색하니까요.
+  const leanOk = state.status === 'all' && list.filter(b => b.status === '읽는 중').length <= 3;
   const rows = []; let cur = [], w = 0;
   list.forEach(b => {
-    const g = geom(b), extra = b.status === '읽는 중' ? Math.round(g.H * 0.12) : 0, need = g.W + extra + 1;
+    const g = geom(b), extra = leanOk && b.status === '읽는 중' ? Math.round(g.H * 0.125) : 0, need = g.W + extra + 1;
     if (cur.length && w + need > avail) { rows.push(cur); cur = []; w = 0; }
     cur.push([b, g]); w += need;
   });
   if (cur.length) rows.push(cur);
   host.innerHTML = '<div class="shelf">' + rows.map(r => {
     const mh = Math.max(...r.map(x => x[1].H));
-    return `<section class="row"><div class="books" style="height:${mh + 30}px">${r.map(([b, g]) => spineHTML(b, g)).join('')}</div><div class="plank"></div></section>`;
+    return `<section class="row"><div class="books" style="height:${mh + 30}px">${r.map(([b, g]) => spineHTML(b, g, { lean: leanOk })).join('')}</div><div class="plank"></div></section>`;
   }).join('') + '</div>';
 }
 const relayoutShelf = debounce(() => { if (state.view === 'shelf') renderShelf(); }, 140);
@@ -999,17 +1004,24 @@ async function addBook(b) {
     requestAnimationFrame(() => $(`.spine[data-id="${CSS.escape(saved.id)}"]`)?.scrollIntoView({ block: 'center', behavior: 'smooth' }));
   } catch (e) { toast(e.message, 5000); }
 }
+/** YES24 정보를 책에 입히기: 작가·분류·키워드·출판사·쪽수는 YES24 기준으로 바뀌고, 제목·날짜·평점·감상·메모는 그대로예요. */
+function applyYes24(b, item, en) {
+  const cat = splitCategory(item.categoryRaw);
+  Object.assign(b, {
+    goodsNo: item.goodsNo, isbn: item.isbn || b.isbn, cover: item.cover, spine: en.spine, color: en.color || b.color,
+    spineAspect: b.ownSpine ? b.spineAspect : en.spineAspect,
+    author: item.author || b.author,
+    category: cat.category || b.category, keywords: cat.category ? cat.keywords : b.keywords,
+    publisher: item.publisher || b.publisher, pubDate: item.pubDate || b.pubDate, pages: toNum(item.pages) || b.pages,
+    heightMm: toNum(item.heightMm) || b.heightMm, thicknessMm: toNum(item.thicknessMm) || b.thicknessMm
+  });
+  state.badSpine.delete(b.id);
+}
 async function applyLink(id, item) {
   const b = bookById(id); if (!b) return;
   $('#add-res').innerHTML = '<p class="hint">책등을 확인하고 있어요…</p>';
   const en = await enrich(item);
-  Object.assign(b, {
-    goodsNo: item.goodsNo, isbn: item.isbn || b.isbn, cover: item.cover, spine: en.spine, color: en.color || b.color,
-    spineAspect: b.ownSpine ? b.spineAspect : en.spineAspect,
-    pages: b.pages || toNum(item.pages), publisher: b.publisher || item.publisher, pubDate: b.pubDate || item.pubDate,
-    heightMm: toNum(item.heightMm) || b.heightMm, thicknessMm: toNum(item.thicknessMm) || b.thicknessMm
-  });
-  state.badSpine.delete(id);
+  applyYes24(b, item, en);
   try { await call('update', { patches: [toWire(b)] }); } catch (e) { toast(e.message, 5000); }
   saveCache(); $('#dlg-add').close(); renderAll();
   if (state.selected === id) { state.draft = JSON.parse(JSON.stringify(b)); setDirty(false); renderDrawer(); }
@@ -1031,30 +1043,34 @@ function matchScore(b, it) {
   if (a1 && a2 && !(a1.includes(a2) || a2.includes(a1)) && dice(a1, a2) < 0.3) s -= 0.2;
   return s;
 }
-function openLinkAll() {
-  const todo = state.books.filter(b => !b.goodsNo && b.title);
+const linkTodo = () => state.books.filter(b => b.title && ($('#link-redo').checked || !b.goodsNo));
+function refreshLinkHint() {
+  const todo = linkTodo();
   $('#link-hint').textContent = todo.length
-    ? `YES24 연결이 안 된 책 ${todo.length}권을 제목과 작가로 찾아서 자동으로 연결해요. 제목이 거의 같은 책만 연결하고, 못 찾은 책은 목록으로 알려드려요. 한 권에 1~2초쯤 걸려요.`
-    : '모든 책이 이미 연결되어 있어요.';
-  $('#link-go').disabled = !todo.length; $('#link-go').textContent = '시작';
+    ? `${todo.length}권을 제목과 작가로 YES24에서 찾아 연결해요. 연결되면 표지와 책등이 붙고, 작가·분류·키워드·출판사·쪽수가 YES24 정보로 바뀌어요. 제목, 날짜, 평점, 감상, 메모는 그대로예요. 제목이 거의 같은 책만 연결하고 못 찾은 책은 목록으로 알려드려요. 한 권에 1~2초쯤 걸려요.`
+    : '연결할 책이 없어요. 이미 연결된 책도 YES24 정보로 다시 채우려면 아래 칸을 켜세요.';
+  $('#link-go').disabled = !todo.length;
+}
+function openLinkAll({ auto = false } = {}) {
+  $('#link-redo').checked = false; $('#link-redo').disabled = false; refreshLinkHint();
+  $('#link-go').textContent = '시작'; $('#link-go').onclick = runLinkAll;
   $('#link-log').innerHTML = ''; $('#link-prog').hidden = true; $('#link-count').textContent = '';
   $('#dlg-link').showModal();
+  if (auto && linkTodo().length) runLinkAll();
 }
 async function runLinkAll() {
-  const todo = state.books.filter(b => !b.goodsNo && b.title), log = $('#link-log'), prog = $('#link-prog');
-  $('#link-go').disabled = true; prog.hidden = false; prog.max = todo.length; prog.value = 0;
+  const todo = linkTodo(), log = $('#link-log'), prog = $('#link-prog');
+  $('#link-go').disabled = true; $('#link-redo').disabled = true; prog.hidden = false; prog.max = todo.length; prog.value = 0;
   let ok = 0, no = 0, batch = [];
   const flush = async () => { if (!batch.length) return; const p = batch; batch = []; try { await call('update', { patches: p }); } catch (e) { log.insertAdjacentHTML('beforeend', `<div class="no">저장 실패: ${esc(e.message)}</div>`); } };
   for (const b of todo) {
     try {
-      const q = (b.isbn ? b.isbn : b.title);
-      const r = await call('search', { q, limit: 6 });
-      let best = null, bs = 0; (r.items || []).forEach(it => { const s = b.isbn ? 1 : matchScore(b, it); if (s > bs) { bs = s; best = it; } });
+      let r = await call('search', { q: b.isbn || b.title, limit: 6 });
+      if (b.isbn && !(r.items || []).length) r = await call('search', { q: b.title, limit: 6 });   // ISBN으로 못 찾으면 제목으로
+      let best = null, bs = 0; (r.items || []).forEach(it => { const s = (b.isbn && it.isbn === b.isbn) ? 1 : matchScore(b, it); if (s > bs) { bs = s; best = it; } });
       if (best && bs >= 0.72) {
         const en = await enrich(best);
-        Object.assign(b, { goodsNo: best.goodsNo, isbn: best.isbn || b.isbn, cover: best.cover, spine: en.spine, color: en.color || b.color,
-          spineAspect: b.ownSpine ? b.spineAspect : en.spineAspect, pages: b.pages || toNum(best.pages), publisher: b.publisher || best.publisher, pubDate: b.pubDate || best.pubDate,
-          heightMm: toNum(best.heightMm) || b.heightMm, thicknessMm: toNum(best.thicknessMm) || b.thicknessMm });
+        applyYes24(b, best, en);
         batch.push(toWire(b)); ok++;
         log.insertAdjacentHTML('beforeend', `<div class="ok">연결됨 · ${esc(b.title)}${en.spine ? '' : ' (책등 사진 없음)'}</div>`);
       } else { no++; log.insertAdjacentHTML('beforeend', `<div class="no">못 찾음 · ${esc(b.title)}</div>`); }
@@ -1133,7 +1149,7 @@ async function readImportFile(file) {
       rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1, raw: true, defval: '' });
     } else {
       const buf = await file.arrayBuffer(); let text = new TextDecoder('utf-8').decode(buf);
-      if (text.includes(' ')) { try { text = new TextDecoder('euc-kr').decode(buf); } catch { /* 그대로 */ } }
+      if (text.includes('�')) { try { text = new TextDecoder('euc-kr').decode(buf); } catch { /* 그대로 */ } }
       rows = parseCSV(text);
     }
     const r = rowsToBooks(rows);
@@ -1155,7 +1171,7 @@ async function runImport() {
       done += chunk.length; $('#imp-hint').textContent = `${done}/${importBooks.length}권 추가 중…`;
     }
     saveCache(); $('#dlg-import').close(); setView('shelf'); renderAll();
-    toast(`${done}권을 가져왔어요. 메뉴의 "표지·책등 일괄 연결"로 표지와 책등을 붙여보세요.`, 6000);
+    openLinkAll({ auto: true });          // 가져온 책은 바로 YES24 정보로 채우기 시작해요
   } catch (e) { toast(`${done}권까지 가져오다 멈췄어요: ${e.message}`, 6000); $('#imp-go').disabled = false; }
 }
 function exportCsv() {
@@ -1220,7 +1236,7 @@ const DEMO = {
     if (kind === 1) deco = `<rect x="0" y="${H - 190}" width="${w}" height="190" fill="${fg}" opacity=".16"/><rect x="0" y="${H - 190}" width="${w}" height="5" fill="${fg}" opacity=".6"/>`;
     if (kind === 2) deco = `<rect x="0" y="0" width="${w}" height="${H * 0.3}" fill="${fg}" opacity=".18"/><rect x="${w * 0.12}" y="${H * 0.3 + 14}" width="${w * 0.76}" height="3" fill="${fg}" opacity=".7"/>`;
     if (kind === 3) deco = `<rect x="${w * .1}" y="${w * .1}" width="${w * .8}" height="${H - w * .2}" fill="none" stroke="${fg}" stroke-width="3" opacity=".5"/>`;
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${H}" viewBox="0 0 ${w} ${H}"><rect width="${w}" height="${H}" fill="${bg}"/>${deco}<text transform="translate(${w / 2 + tf * .33},${kind === 2 ? H * 0.3 + 60 : 70}) rotate(90)" font-family="Georgia,'Noto Serif KR',serif" font-weight="700" font-size="${tf}" fill="${fg}">${t}</text><text transform="translate(${w / 2 + tf * .2},${H - 60 - a.length * tf * .5}) rotate(90)" font-family="sans-serif" font-size="${Math.round(tf * .62)}" fill="${fg}" opacity=".85">${a}</text></svg>`;
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${H}" viewBox="0 0 ${w} ${H}" preserveAspectRatio="none"><rect width="${w}" height="${H}" fill="${bg}"/>${deco}<text transform="translate(${w / 2 + tf * .33},${kind === 2 ? H * 0.3 + 60 : 70}) rotate(90)" font-family="Georgia,'Noto Serif KR',serif" font-weight="700" font-size="${tf}" fill="${fg}">${t}</text><text transform="translate(${w / 2 + tf * .2},${H - 60 - a.length * tf * .5}) rotate(90)" font-family="sans-serif" font-size="${Math.round(tf * .62)}" fill="${fg}" opacity=".85">${a}</text></svg>`;
     return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
   },
   svgCover(title, author, bg, fg) {
@@ -1339,7 +1355,7 @@ function bind() {
     await addBook(b); $('#dlg-add').close();
   };
   $('#imp-file').onchange = e => e.target.files[0] && readImportFile(e.target.files[0]); $('#imp-go').onclick = runImport;
-  $('#link-go').onclick = runLinkAll;
+  $('#link-go').onclick = runLinkAll; $('#link-redo').addEventListener('change', refreshLinkHint);
   $('#dlg-link').addEventListener('close', () => { $('#link-go').onclick = runLinkAll; });
 
   // 단축키

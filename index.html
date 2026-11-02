@@ -302,7 +302,8 @@ progress{width:100%;height:10px;accent-color:var(--accent)}
   <header><h2>엑셀·CSV 가져오기</h2><button class="x" aria-label="닫기" type="button" data-close>×</button></header>
   <div class="bd">
     <p class="hint">첫 줄에 <b>제목, 작가, 분류, 키워드, 읽기시작한날, 종료한날, 평점, 감상</b> 같은 머리글이 있는 파일을 골라주세요. 읽은기간은 날짜로 자동 계산해서 가져오지 않아요.</p>
-    <input type="file" id="imp-file" accept=".xlsx,.xls,.csv,.tsv,.txt" style="margin-top:12px">
+    <div class="addstat"><label><input type="radio" name="impmode" value="add" checked>새 책으로 추가</label><label><input type="radio" name="impmode" value="restore">책장에 있는 책의 키워드만 복원</label></div>
+    <input type="file" id="imp-file" accept=".xlsx,.xls,.csv,.tsv,.txt" style="margin-top:6px">
     <div id="imp-prev"></div>
   </div>
   <footer><span class="hint" id="imp-hint"></span><span class="sp"></span><button type="button" class="btn primary" id="imp-go" disabled>가져오기</button></footer>
@@ -594,8 +595,8 @@ function renderShelf() {
   const list = visibleBooks();
   if (!list.length) { host.innerHTML = '<p class="empty">조건에 맞는 책이 없어요.</p>'; return; }
   const avail = host.clientWidth - 2 * 28;
-  // 읽는 중인 책을 기울이는 건 "전체" 보기에서 몇 권 안 될 때만. 전부 기울어 보이면 어색하니까요.
-  const leanOk = state.status === 'all' && list.filter(b => b.status === '읽는 중').length <= 3;
+  // 읽는 중인 책은 "전체" 보기에서만 기울여요. "읽는 중" 탭이나 다른 탭에서는 똑바로 서요.
+  const leanOk = state.status === 'all';
   const rows = []; let cur = [], w = 0;
   list.forEach(b => {
     const g = geom(b), extra = leanOk && b.status === '읽는 중' ? Math.round(g.H * 0.125) : 0, need = g.W + extra + 1;
@@ -975,10 +976,14 @@ async function doSearch() {
   } catch (e) { box.innerHTML = `<p class="hint" style="color:var(--danger)">${esc(e.message)}</p>`; }
   $('#add-go').disabled = false;
 }
-function splitCategory(raw) {
-  const parts = String(raw || '').split('>').map(s => s.trim()).filter(Boolean).filter(p => !/^(국내도서|외국도서|해외도서|도서)$/.test(p));
-  return { category: parts.length ? parts[parts.length - 1] : '', keywords: parts.slice(0, -1).join(', ') };
+/** YES24 분류는 '국내도서-문학' 모양이에요. 앞의 '국내도서-' 같은 구분은 모두 같으니 빼요. */
+const CAT_PREFIX = /^\s*(국내도서|외국도서|해외도서)\s*[-–—>＞›]\s*/;
+function cleanCategory(s) {
+  s = String(s || '').trim().replace(CAT_PREFIX, '').replace(/\s*[>＞›]\s*/g, '-').trim();
+  return /^(국내도서|외국도서|해외도서)$/.test(s) ? '' : s;
 }
+/** 키워드는 YES24에 없는 항목이라 건드리지 않아요. (그래서 keywords는 늘 빈 값이에요) */
+function splitCategory(raw) { return { category: cleanCategory(raw), keywords: '' }; }
 async function pickItem(item) {
   if (state.linkTarget) return applyLink(state.linkTarget, item);
   const dup = state.books.find(b => (item.isbn && b.isbn === item.isbn) || (item.goodsNo && b.goodsNo === item.goodsNo));
@@ -1011,7 +1016,7 @@ function applyYes24(b, item, en) {
     goodsNo: item.goodsNo, isbn: item.isbn || b.isbn, cover: item.cover, spine: en.spine, color: en.color || b.color,
     spineAspect: b.ownSpine ? b.spineAspect : en.spineAspect,
     author: item.author || b.author,
-    category: cat.category || b.category, keywords: cat.category ? cat.keywords : b.keywords,
+    category: cat.category || b.category,       // 키워드는 YES24에 없으니 내가 쓴 그대로 둬요
     publisher: item.publisher || b.publisher, pubDate: item.pubDate || b.pubDate, pages: toNum(item.pages) || b.pages,
     heightMm: toNum(item.heightMm) || b.heightMm, thicknessMm: toNum(item.thicknessMm) || b.thicknessMm
   });
@@ -1158,10 +1163,41 @@ async function readImportFile(file) {
     const sample = importBooks.slice(0, 6).map(b => `<tr><td>${esc(b.title)}</td><td>${esc(b.author)}</td><td>${esc(b.category)}</td><td>${esc(b.startDate)}</td><td>${esc(b.endDate)}</td><td>${b.rating || ''}</td><td>${esc(b.status)}</td></tr>`).join('');
     prev.innerHTML = `<p class="hint">읽어온 열: ${r.found.map(k => FIELD_LABEL[k]).join(', ')}</p>
       <div class="tbl-prev"><table><thead><tr><th>제목</th><th>작가</th><th>분류</th><th>시작</th><th>종료</th><th>평점</th><th>상태</th></tr></thead><tbody>${sample}</tbody></table></div>`;
-    $('#imp-hint').textContent = `${importBooks.length}권을 책장에 추가해요`; $('#imp-go').disabled = !importBooks.length;
+    updateImpHint();
   } catch (e) { prev.innerHTML = `<p class="hint" style="color:var(--danger)">${esc(e.message || '파일을 읽지 못했어요.')}</p>`; }
 }
+const impMode = () => $('input[name=impmode]:checked').value;
+/** 엑셀의 키워드를, 제목이 같은 책장 속 책에 채울 계획을 세워요. (키워드가 비어 있는 줄은 건너뛰어요) */
+function restorePlan() {
+  const idx = new Map();
+  state.books.forEach(b => { const k = normTxt(b.title); if (!idx.has(k)) idx.set(k, []); idx.get(k).push(b); });
+  const patches = []; let miss = 0;
+  importBooks.forEach(ib => {
+    if (!ib.keywords) return;
+    const c = idx.get(normTxt(ib.title)); if (!c) { miss++; return; }
+    const t = c.find(b => normTxt(b.author) === normTxt(ib.author)) || c[0];
+    patches.push({ id: t.id, keywords: ib.keywords });
+  });
+  return { patches, miss };
+}
+function updateImpHint() {
+  const go = $('#imp-go');
+  if (!importBooks.length) { $('#imp-hint').textContent = ''; go.disabled = true; return; }
+  if (impMode() === 'restore') {
+    const p = restorePlan(); go.textContent = '키워드 복원'; go.disabled = !p.patches.length;
+    $('#imp-hint').textContent = `키워드 ${p.patches.length}권을 복원해요 (같은 제목을 못 찾은 책 ${p.miss}권)`;
+  } else { go.textContent = '가져오기'; go.disabled = false; $('#imp-hint').textContent = `${importBooks.length}권을 책장에 추가해요`; }
+}
+async function runRestore() {
+  const { patches } = restorePlan(); $('#imp-go').disabled = true;
+  try {
+    for (let i = 0; i < patches.length; i += 100) await call('update', { patches: patches.slice(i, i + 100) });
+    patches.forEach(p => { const b = bookById(p.id); if (b) b.keywords = p.keywords; });
+    saveCache(); $('#dlg-import').close(); renderAll(); toast(`${patches.length}권의 키워드를 복원했어요`, 4500);
+  } catch (e) { toast(e.message, 6000); $('#imp-go').disabled = false; }
+}
 async function runImport() {
+  if (impMode() === 'restore') return runRestore();
   $('#imp-go').disabled = true; let done = 0;
   try {
     for (let i = 0; i < importBooks.length; i += 100) {
@@ -1191,7 +1227,11 @@ async function refresh({ quiet = false } = {}) {
   if (!quiet && !state.books.length) banner('서버에서 불러오는 중…');
   try {
     const r = await call('list');
-    state.books = r.books.map(normBook); state.settings = r.settings || {}; saveCache();
+    state.books = r.books.map(normBook); state.settings = r.settings || {};
+    const fixes = [];                                   // 분류 앞에 붙은 '국내도서-'는 한 번 정리해서 시트에도 반영해요
+    state.books.forEach(b => { const c = cleanCategory(b.category); if (c !== b.category) { b.category = c; fixes.push({ id: b.id, category: c }); } });
+    saveCache();
+    (async () => { for (let i = 0; i < fixes.length; i += 100) { try { await call('update', { patches: fixes.slice(i, i + 100) }); } catch { break; } } })();
     banner(state.conn.demo ? '샘플 데이터로 둘러보는 중이에요. 실제 시트와는 연결되어 있지 않아요.' : '', false, state.conn.demo ? '연결 설정' : '');
   } catch (e) { banner(e.message, true, '다시 시도'); }
   renderAll(); if (state.selected && !state.dirty) { const b = bookById(state.selected); if (b) { state.draft = JSON.parse(JSON.stringify(b)); renderDrawer(); } }
@@ -1295,7 +1335,7 @@ async function mock(action, p) {
     case 'diagnose': return { ok: true, bookRows: db.books.length, yes24: { status: 200, found: 1, sample: '(샘플 모드예요)' } };
     case 'search': {
       const q = p.q; const pal = [['#4A6B8A', '#FFF'], ['#8A4A3C', '#FBEFE0'], ['#3F5F4A', '#F3F1DD']];
-      return { ok: true, items: [0, 1, 2].map(i => ({ goodsNo: 'demo-s' + i + hash(q), title: `${q} ${['', '(개정판)', '2'][i]}`.trim(), author: ['홍길동', '김작가', '이저자'][i], publisher: '샘플출판사', isbn: '', pubDate: '2024-0' + (i + 3) + '-01', pages: [240, 360, 520][i], heightMm: 210, thicknessMm: '', categoryRaw: '국내도서>소설/시/희곡>한국소설',
+      return { ok: true, items: [0, 1, 2].map(i => ({ goodsNo: 'demo-s' + i + hash(q), title: `${q} ${['', '(개정판)', '2'][i]}`.trim(), author: ['홍길동', '김작가', '이저자'][i], publisher: '샘플출판사', isbn: '', pubDate: '2024-0' + (i + 3) + '-01', pages: [240, 360, 520][i], heightMm: 210, thicknessMm: '', categoryRaw: '국내도서-문학',
         cover: DEMO.svgCover(q, ['홍길동', '김작가', '이저자'][i], pal[i][0], pal[i][1]), spine: DEMO.svgSpine(q, ['홍길동', '김작가', '이저자'][i], pal[i][0], pal[i][1], [240, 360, 520][i], i + 1) })) };
     }
   }
@@ -1313,7 +1353,7 @@ function bind() {
   document.addEventListener('click', e => {
     const a = e.target.closest('[data-act]'); if (!a) return;
     menu.hidden = true;
-    ({ add: () => openAdd(), import: () => { $('#imp-prev').innerHTML = ''; $('#imp-file').value = ''; $('#imp-go').disabled = true; $('#imp-hint').textContent = ''; $('#dlg-import').showModal(); },
+    ({ add: () => openAdd(), import: () => { importBooks = []; $('#imp-prev').innerHTML = ''; $('#imp-file').value = ''; $('#imp-go').disabled = true; $('#imp-go').textContent = '가져오기'; $('#imp-hint').textContent = ''; $('input[name=impmode][value=add]').checked = true; $('#dlg-import').showModal(); },
       export: exportCsv, linkall: openLinkAll, refresh: () => refresh(), conn: openConn, goal: setGoal }[a.dataset.act] || (() => { }))();
   });
 
@@ -1355,6 +1395,7 @@ function bind() {
     await addBook(b); $('#dlg-add').close();
   };
   $('#imp-file').onchange = e => e.target.files[0] && readImportFile(e.target.files[0]); $('#imp-go').onclick = runImport;
+  $$('input[name=impmode]').forEach(r => r.addEventListener('change', updateImpHint));
   $('#link-go').onclick = runLinkAll; $('#link-redo').addEventListener('change', refreshLinkHint);
   $('#dlg-link').addEventListener('close', () => { $('#link-go').onclick = runLinkAll; });
 

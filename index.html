@@ -350,9 +350,9 @@ function toast(msg, ms = 2600) { const t = $('#toast'); t.textContent = msg; t.c
 const LS = { conn: 'readlog.conn', cache: 'readlog.cache', scale: 'readlog.scale', sort: 'readlog.sort', demo: 'readlog.demo' };
 
 /* ▼ 여기에 앱스 스크립트 웹앱 주소를 붙여넣으세요 (따옴표는 그대로 두세요).
-     예) const PRESET_URL = 'https://script.google.com/macros/s/AKfycbzcXyF1LUi1_gMa1sULCYcQpGIR4ViJcK5RZqUfbkOgVhMcS1xL54hW3zuA5Ckl0X-tmg/exec';
+     예) const PRESET_URL = '';
    채워두면 새 브라우저에서는 접근 암호만 입력하면 됩니다. 비워두면 주소도 직접 입력해요. */
-const PRESET_URL = '';
+const PRESET_URL = 'https://script.google.com/macros/s/AKfycbzcXyF1LUi1_gMa1sULCYcQpGIR4ViJcK5RZqUfbkOgVhMcS1xL54hW3zuA5Ckl0X-tmg/exec';
 /* ▲ 접근 암호는 파일에 넣지 마세요. 브라우저마다 한 번씩만 입력해요. */
 const STATUSES = ['읽을 책', '읽는 중', '완독', '중단'];
 const SPINE_MIN_RATIO = 3.5;   // 책등 사진은 세로가 가로의 3.5배 이상으로 길어요 (없을 때 오는 '이미지 준비중' 그림은 이보다 훨씬 뚱뚱해요)

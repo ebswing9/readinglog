@@ -576,13 +576,6 @@ th[data-sort=start]{width:10%}th[data-sort=end]{width:10%}th[data-sort=days]{wid
 /* 감상·문장: 보여주는 영역 */
 .sec-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
 .sec-h .lab{font-size:13px;font-weight:700;color:var(--muted)}
-.vbox,.qv{display:block;width:100%;text-align:left;border:1px solid var(--line);background:#FBFAFD;color:var(--ink);transition:border-color .2s,background .2s}
-.vbox:hover,.qv:hover{border-color:var(--accent);background:#fff}
-.vbox{border-radius:14px;padding:13px 15px;font:400 14.5px/1.8 var(--serif);white-space:pre-wrap;word-break:break-word}
-.qv{margin-bottom:8px;padding:11px 14px 10px;border-left:3px solid #CFC6EA;border-radius:4px 14px 14px 4px}
-.qv .qt{display:block;font:400 14px/1.75 var(--serif);white-space:pre-wrap;word-break:break-word}
-.qv .qpg{display:block;margin-top:5px;text-align:right;font-size:12px;color:var(--muted)}
-.vempty{margin:0;padding:6px 2px 2px;font-size:13.5px;color:var(--muted)}
 /* 쓰기 팝업 */
 #w-text{display:block;width:100%;min-height:300px;padding:16px 18px;border-radius:14px;background:#FBFAFD;font:400 15.5px/1.85 var(--serif);resize:vertical}
 #w-text.short{min-height:170px}
@@ -634,18 +627,6 @@ html,body{overflow-x:clip}
 .tb-btn.dice:hover svg{transform:rotate(90deg) scale(1.1)}
 
 /* 상세: 위/아래 줄 */
-#drawer .d-top{padding:14px 18px 6px;border-bottom:0}
-.d-x{width:34px;height:34px;border:0;border-radius:50%;background:rgba(160,148,185,.13);color:var(--ink2);display:grid;place-items:center;transition:background .2s,transform .3s var(--ease)}
-.d-x:hover{background:rgba(160,148,185,.26);transform:rotate(90deg)}
-.d-x svg{width:13px;height:13px}
-#drawer .d-foot{padding:14px 22px 18px;border-top:0;background:rgba(255,254,252,.96);box-shadow:0 -12px 24px -16px rgba(120,100,80,.3)}
-.d-del{display:inline-flex;align-items:center;gap:6px;border:0;background:none;color:var(--muted);font-size:13.5px;font-weight:500;padding:8px 13px 8px 9px;border-radius:99px;transition:color .2s,background .2s}
-.d-del:hover{color:var(--danger);background:#FCEFEE}
-.d-del svg{width:15px;height:15px}
-.d-save{display:inline-flex;align-items:center;gap:7px;border:0;border-radius:99px;padding:11px 28px 11px 22px;background:linear-gradient(135deg,#6F659B,#8D81C2);color:#fff;font-weight:700;font-size:14.5px;box-shadow:0 10px 22px -10px rgba(108,98,153,.75);transition:transform .2s var(--ease),box-shadow .2s}
-.d-save:hover{transform:translateY(-2px);box-shadow:0 14px 26px -10px rgba(108,98,153,.8)}
-.d-save:active{transform:scale(.97)}
-.d-save svg{width:15px;height:15px}
 
 /* 감상 · 인상 깊은 문장: 일기장 느낌 */
 .j-sec{margin-top:32px}
@@ -655,23 +636,57 @@ html,body{overflow-x:clip}
 .j-add{display:inline-flex;align-items:center;gap:5px;border:0;background:var(--accent-soft);color:var(--accent-d);font-size:12.5px;font-weight:700;padding:6px 13px 6px 10px;border-radius:99px;transition:transform .2s var(--ease),background .2s}
 .j-add:hover{background:#E8E2F7;transform:translateY(-1px)}
 .j-add svg{width:13px;height:13px}
-.note{display:block;position:relative;width:100%;text-align:left;border:1px solid #F0E7D8;border-radius:20px;padding:20px 22px 14px;background:linear-gradient(180deg,#FFFDF9,#FBF6EC);box-shadow:inset 0 1px 0 #fff,0 14px 26px -18px rgba(130,100,60,.45);color:var(--ink);transition:transform .25s var(--ease),box-shadow .25s,border-color .2s}
-.note:hover{transform:translateY(-2px);border-color:#E7D8BF;box-shadow:inset 0 1px 0 #fff,0 18px 30px -18px rgba(130,100,60,.55)}
-.note .nt{display:block;font:400 15px/2 var(--serif);color:#4A433A;white-space:pre-wrap;word-break:break-word;text-wrap:pretty}
-.note .nf{display:block;margin-top:14px;text-align:right;font-size:11.5px;letter-spacing:.03em;color:var(--muted)}
-.note.empty{display:flex;flex-direction:column;align-items:center;gap:5px;text-align:center;padding:26px 20px;border:1.5px dashed #E3D8C5;background:rgba(255,253,249,.55);box-shadow:none;color:var(--muted)}
-.note.empty svg{width:22px;height:22px;color:#C4B8E8;margin-bottom:3px}
-.note.empty .gq{font:700 40px/.7 var(--serif);font-style:normal;color:#C4B8E8;height:22px}
-.note.empty b{font:700 14.5px var(--serif);color:var(--ink2)}
-.note.empty span{font-size:12.5px}
-.note.empty:hover{border-color:var(--accent);background:#fff;box-shadow:none}
-.qv{--qc:#F4F0FB;--qd:#CFC6EA;position:relative;display:block;width:100%;text-align:left;margin-bottom:12px;padding:36px 22px 13px;border:0;border-radius:20px;background:var(--qc);color:var(--ink);transition:transform .25s var(--ease),box-shadow .25s}
-.qv::before{content:"“";position:absolute;left:18px;top:8px;font:700 44px/1 var(--serif);color:var(--qd)}
-.qv.q1{--qc:#FCF0EA;--qd:#EFC5B0}.qv.q2{--qc:#EDF6F0;--qd:#B5DCC3}.qv.q3{--qc:#FBF5E0;--qd:#EAD58E}
-.qv:hover{background:var(--qc);transform:translateY(-2px) rotate(-.25deg);box-shadow:0 16px 28px -16px rgba(100,80,60,.45)}
+/* ═════════ 수정 v5 ═════════ */
+/* 읽을 책 / 중단 */
+.spine.stop{filter:saturate(.4) brightness(.96)}
+.spine .tg{position:absolute;pointer-events:none;z-index:3}
+.spine .rib{top:0;left:50%;width:clamp(8px,30%,15px);height:min(26%,60px);transform:translateX(-50%);background:linear-gradient(90deg,#B3A6DF,#D0C6EF 50%,#B3A6DF);clip-path:polygon(0 0,100% 0,100% 100%,50% 80%,0 100%)}
+.spine .band{left:0;right:0;top:38%;height:clamp(4px,3.2%,9px);background:linear-gradient(180deg,rgba(255,255,255,.3),rgba(70,62,84,.62) 40%,rgba(50,44,62,.72));box-shadow:0 1px 2px rgba(0,0,0,.25)}
+
+/* 상세 서랍 윗줄: 닫기 · (자동저장 안내) · 삭제 · 저장 */
+#drawer .d-top{padding:12px 16px 4px;border-bottom:0;gap:6px}
+.d-x{width:34px;height:34px;border:0;border-radius:50%;background:rgba(160,148,185,.13);color:var(--ink2);display:grid;place-items:center;transition:background .2s,color .2s}
+.d-x:hover{background:rgba(160,148,185,.26)}
+.d-x svg{width:13px;height:13px}
+.d-trash:hover{background:#FCEFEE;color:var(--danger)}
+.d-trash svg{width:15px;height:15px}
+.d-save{border:0;border-radius:99px;padding:8px 16px;margin-left:2px;background:var(--accent-soft);color:var(--accent-d);font-size:13px;font-weight:600;transition:background .2s}
+.d-save:hover{background:#E6E0F6}
+#drawer .d-body{padding-bottom:40px}
+
+/* 별점 */
+.rating{display:inline-block;position:relative;width:120px;height:24px;font-size:0;line-height:0;vertical-align:middle;color:inherit;transform:none}
+.rating:hover{transform:none}
+.rating .rb,.rating .fg{position:absolute;left:0;top:0;height:24px;overflow:hidden}
+.rating .rb{width:120px;color:#E7E2D9}
+.rating .fg{color:var(--rc);transition:width .22s var(--ease),color .2s}
+.rating.hov .fg{opacity:.6;transition:none}
+.rating .rs{display:block;width:120px;max-width:none;height:24px;fill:currentColor;stroke:currentColor;stroke-width:1.6;stroke-linejoin:round}
+.rating-num{margin-left:12px;font:600 15px var(--serif);color:var(--ink2);vertical-align:middle}
+
+/* 감상 / 문장: 장식 없이 글만 */
+.note-t{display:block;width:calc(100% + 24px);margin:0 -12px;padding:10px 12px;text-align:left;border:0;border-radius:14px;background:none;color:var(--ink2);font:400 15px/1.95 var(--serif);white-space:pre-wrap;word-break:break-word;text-wrap:pretty;transition:background .2s}
+.note-t:hover{background:rgba(160,148,185,.08)}
+.qv{--qd:#CFC6EA;position:relative;display:block;width:calc(100% + 24px);margin:0 -12px 4px;padding:12px 12px 12px 26px;text-align:left;border:0;border-radius:14px;background:none;color:var(--ink);transition:background .2s}
+.qv::before{content:"";position:absolute;left:12px;top:16px;bottom:16px;width:2px;border-radius:2px;background:var(--qd)}
+.qv.q1{--qd:#E6C5C0}.qv.q2{--qd:#BCD7C5}.qv.q3{--qd:#E4D4A8}
+.qv:hover{background:rgba(160,148,185,.08)}
 .qv .qt{display:block;font:400 14.5px/1.9 var(--serif);color:#46403A;white-space:pre-wrap;word-break:break-word;text-wrap:pretty}
-.qv .qpg{display:block;margin-top:9px;text-align:right;font-size:12px;color:var(--muted)}
-.qv .qpg::before{content:"— "}
+.qv .qm{display:block;margin-top:5px;font-size:11.5px;color:var(--muted)}
+
+/* 쓰기 팝업: 챕터 · 쪽수 */
+.w-meta{display:flex;gap:10px;margin-top:12px}
+.w-meta input{margin:0;min-width:0}
+#w-chapter{flex:1;font-size:13.5px}
+.w-meta .w-page{display:flex;align-items:center;gap:6px;flex:none;margin:0;color:var(--muted);font-size:13.5px}
+#w-page{width:84px;text-align:center}
+/* 보정: 별 색 · 팝업 입력칸 */
+.rating{--rc:#E9B24C}
+#w-text.short{min-height:0}
+.w-meta input{height:40px;padding:0 14px;border:1px solid var(--line-d);border-radius:12px;background:#FBFAFD;font:inherit;font-size:13.5px;color:var(--ink)}
+.w-meta input::placeholder{color:#B5AEA3}
+.w-meta input:focus{background:#fff}
+#w-page{width:88px}
 </style>
 </head>
 <body>
@@ -783,9 +798,9 @@ html,body{overflow-x:clip}
   <header><h2 id="w-title">감상 쓰기</h2><button class="x" aria-label="닫기" type="button" data-close>×</button></header>
   <div class="bd">
     <textarea id="w-text" rows="10" aria-label="내용"></textarea>
-    <label class="w-page" id="w-pagewrap" hidden>쪽수<input id="w-page" inputmode="numeric" placeholder="00" autocomplete="off">쪽</label>
+    <div class="w-meta" id="w-meta" hidden><input id="w-chapter" placeholder="챕터 · 단편 제목 (선택)" autocomplete="off" aria-label="챕터 또는 단편 제목"><label class="w-page"><input id="w-page" inputmode="numeric" placeholder="쪽수" autocomplete="off" aria-label="쪽수">쪽</label></div>
   </div>
-  <footer><button type="button" class="btn danger" id="w-del" hidden>삭제</button><span class="hint" id="w-hint">Ctrl(⌘) + Enter로 완료</span><span class="sp"></span><button type="button" class="btn" data-close>취소</button><button type="button" class="btn primary" id="w-ok">완료</button></footer>
+  <footer><button type="button" class="btn danger" id="w-del" hidden>삭제</button><span class="hint" id="w-hint">Ctrl(⌘) + Enter로 완료</span><span class="sp"></span><button type="button" class="btn" data-close>취소</button><button type="button" class="btn" id="w-more" hidden>하나 더 추가</button><button type="button" class="btn primary" id="w-ok">완료</button></footer>
 </form></dialog>
 
 <script src="config.js"></script>
@@ -867,7 +882,7 @@ async function callRaw(action, payload = {}) {
 
 /* ════════════════ 책 데이터 ════════════════ */
 function parseQuotes(v) {
-  const clean = a => a.map(q => ({ text: String(q.text || ''), page: String(q.page || '') }));
+  const clean = a => a.map(q => ({ text: String(q.text || ''), page: String(q.page || ''), chapter: String(q.chapter || '') }));
   if (Array.isArray(v)) return clean(v);
   if (!v) return [];
   try { const a = JSON.parse(v); return Array.isArray(a) ? clean(a) : []; }
@@ -1035,7 +1050,7 @@ const leanShift = (b, H) => Math.round(H * Math.sin(leanInfo(b).deg * Math.PI / 
 function spineHTML(b, g, { lean = true, sel = true, i = 0 } = {}) {
   const isLean = lean && b.status === '읽는 중';
   const L = isLean ? leanInfo(b) : null;
-  const cls = ['spine', g.mode, isLean && 'lean', isLean && L.dir > 0 && 'lean-r', b.status === '읽을 책' && 'todo', sel && state.selected === b.id && 'sel'].filter(Boolean).join(' ');
+  const cls = ['spine', g.mode, isLean && 'lean', isLean && L.dir > 0 && 'lean-r', b.status === '읽을 책' && 'todo', b.status === '중단' && 'stop', sel && state.selected === b.id && 'sel'].filter(Boolean).join(' ');
   let style = `width:${g.W}px;height:${g.H}px;--i:${Math.min(i, 60)};`;
   if (isLean) style += `--lean:${(L.dir * L.deg).toFixed(1)}deg;margin-${L.dir < 0 ? 'left' : 'right'}:${leanShift(b, g.H)}px;`;   // 왼쪽 책에 기대도록, 기울어진 만큼 오른쪽으로 비켜 꽂아요
   let inner = '';
@@ -1047,7 +1062,8 @@ function spineHTML(b, g, { lean = true, sel = true, i = 0 } = {}) {
     style += `--sp-bg:${bg};--sp-ink:${inkFor(bg)};`;
     inner = `<span class="t" style="font-size:${fs.toFixed(1)}px;max-width:${g.H - 34}px"><b>${esc(b.title)}</b><i>${esc(b.author)}</i></span>`;
   }
-  return `<button type="button" class="${cls}" style="${style}" data-id="${esc(b.id)}" title="${esc(b.title)}${b.author ? ' · ' + esc(b.author) : ''}" aria-label="${esc(b.title)}">${inner}</button>`;
+  const tag = b.status === '읽을 책' ? '<i class="tg rib"></i>' : b.status === '중단' ? '<i class="tg band"></i>' : '';   // 읽을 책: 책갈피 리본 / 중단: 고무줄로 묶어둠
+  return `<button type="button" class="${cls}" style="${style}" data-id="${esc(b.id)}" title="${esc(b.title)}${b.author ? ' · ' + esc(b.author) : ''}" aria-label="${esc(b.title)}">${inner}${tag}</button>`;
 }
 
 
@@ -1114,18 +1130,26 @@ function sortQuotes(all) {
 
 /* ════════════════ 감상·문장 쓰기 팝업 ════════════════ */
 let writeCtx = null;
-function openWrite({ title, text = '', page = null, onOk, onDelete }) {
-  writeCtx = { onOk, onDelete };
+function openWrite({ title, text = '', page = null, chapter = '', onOk, onDelete, onMore }) {
+  writeCtx = { onOk, onDelete, onMore, n: 0 };
   $('#w-title').textContent = title;
-  const t = $('#w-text'); t.value = text; t.classList.toggle('short', page !== null);
-  $('#w-pagewrap').hidden = page === null; $('#w-page').value = page ?? '';
-  $('#w-del').hidden = !onDelete;
+  const t = $('#w-text'); t.value = text; t.classList.toggle('short', page !== null); t.rows = page !== null ? 6 : 10;
+  $('#w-meta').hidden = page === null; $('#w-page').value = page ?? ''; $('#w-chapter').value = chapter;
+  $('#w-del').hidden = !onDelete; $('#w-more').hidden = !onMore;
+  $('#w-hint').textContent = 'Ctrl(⌘) + Enter로 완료';
   $('#dlg-write').showModal(); t.focus(); t.setSelectionRange(t.value.length, t.value.length);
 }
 function writeOk() {
   const c = writeCtx; if (!c) return;
   writeCtx = null; $('#dlg-write').close();
-  c.onOk($('#w-text').value, $('#w-page').value.trim());
+  c.onOk($('#w-text').value, $('#w-page').value.trim(), $('#w-chapter').value.trim());
+}
+/** 문장을 하나 넣고 창은 그대로 둬요. 챕터는 그대로 두고 문장·쪽수만 비워서 바로 다음 문장을 쓸 수 있어요. */
+function writeMore() {
+  const c = writeCtx, t = $('#w-text'); if (!c?.onMore) return;
+  if (!t.value.trim()) return t.focus();
+  c.onMore(t.value, $('#w-page').value.trim(), $('#w-chapter').value.trim()); c.n++;
+  t.value = ''; $('#w-page').value = ''; $('#w-hint').textContent = `${c.n}개 추가했어요 · 이어서 쓰세요`; t.focus();
 }
 function editReview() {
   const d = state.draft; if (!d) return;
@@ -1133,13 +1157,18 @@ function editReview() {
 }
 function addQuote() {
   const d = state.draft; if (!d) return;
-  openWrite({ title: '인상 깊은 문장 추가', page: '', onOk: (v, pg) => { if (v.trim()) { d.quotes.push({ text: v.replace(/\s+$/, ''), page: pg }); setDirty(); } renderDrawer(); } });
+  const push = (v, pg, ch) => { d.quotes.push({ text: v.replace(/\s+$/, ''), page: pg, chapter: ch }); setDirty(); };
+  openWrite({
+    title: '인상 깊은 문장 추가', page: '', chapter: '',
+    onMore: (v, pg, ch) => { push(v, pg, ch); renderDrawer(); },
+    onOk: (v, pg, ch) => { if (v.trim()) push(v, pg, ch); renderDrawer(); }
+  });
 }
 function editQuote(i) {
   const d = state.draft, q = d?.quotes[i]; if (!q) return;
   openWrite({
-    title: '문장 수정', text: q.text, page: q.page,
-    onOk: (v, pg) => { if (!v.trim()) d.quotes.splice(i, 1); else { q.text = v.replace(/\s+$/, ''); q.page = pg; } setDirty(); renderDrawer(); },
+    title: '문장 수정', text: q.text, page: q.page, chapter: q.chapter || '',
+    onOk: (v, pg, ch) => { if (!v.trim()) d.quotes.splice(i, 1); else { q.text = v.replace(/\s+$/, ''); q.page = pg; q.chapter = ch; } setDirty(); renderDrawer(); },
     onDelete: () => { d.quotes.splice(i, 1); setDirty(); renderDrawer(); }
   });
 }
@@ -1264,7 +1293,7 @@ function renderQuotes() {
   const all = [];
   state.books.forEach(b => (b.quotes || []).forEach(q => { if (q.text && q.text.trim()) all.push({ b, q }); }));
   sortQuotes(all);
-  const list = all.filter(({ b, q }) => { const hay = (q.text + '\n' + b.title + '\n' + b.author).toLowerCase(); return terms.every(t => hay.includes(t)); });
+  const list = all.filter(({ b, q }) => { const hay = (q.text + '\n' + (q.chapter || '') + '\n' + b.title + '\n' + b.author).toLowerCase(); return terms.every(t => hay.includes(t)); });
   const head = `<div class="q-head"><h2>인상 깊은 문장</h2><span class="muted">${list.length}개${terms.length ? ` (전체 ${all.length}개 중)` : ''}</span></div>`;
   if (!list.length) {
     host.innerHTML = `<div class="quotes">${head}<p class="empty" style="padding:60px 0">${all.length ? '검색 결과가 없어요.' : '아직 남긴 문장이 없어요. 책 상세에서 “문장 추가”로 기록해보세요.'}</p></div>`; return;
@@ -1272,7 +1301,7 @@ function renderQuotes() {
   host.innerHTML = `<div class="quotes">${head}<div class="q-grid">${list.map(({ b, q }) => `
     <figure class="qcard" data-qid="${esc(b.id)}" tabindex="0">
       <blockquote>${esc(q.text)}</blockquote>
-      <figcaption>${b.cover ? `<img src="${esc(b.cover)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : ''}<span><b>${esc(b.title)}</b>${b.author ? ' · ' + esc(b.author) : ''}${q.page ? ` · ${esc(q.page)}쪽` : ''}</span></figcaption>
+      <figcaption>${b.cover ? `<img src="${esc(b.cover)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : ''}<span><b>${esc(b.title)}</b>${b.author ? ' · ' + esc(b.author) : ''}${q.chapter ? ` · ${esc(q.chapter)}` : ''}${q.page ? ` · ${esc(q.page)}쪽` : ''}</span></figcaption>
     </figure>`).join('')}</div></div>`;
 }
 
@@ -1390,8 +1419,13 @@ function setView(v) {
 }
 
 /* ════════════════ 상세 서랍 ════════════════ */
+const STAR_SVG = '<svg class="rs" viewBox="0 0 120 24" aria-hidden="true">' + [0, 1, 2, 3, 4].map(i => `<path transform="translate(${i * 24} 0)" d="M12 2.9l2.8 5.9 6.4.9-4.7 4.5 1.2 6.4L12 17.5l-5.7 3.1 1.2-6.4-4.7-4.5 6.4-.9z"/>`).join('') + '</svg>';
 function ratingHTML(v) {
-  return `<span class="rating" id="rating" role="slider" tabindex="0" aria-label="평점" aria-valuemin="0" aria-valuemax="5" aria-valuenow="${v}">★★★★★<span class="fg" style="width:${v / 5 * 100}%">★★★★★</span></span><span class="rating-num">${v ? v.toFixed(1) : '평점 없음'}</span>`;
+  return `<span class="rating" id="rating" role="slider" tabindex="0" aria-label="평점" aria-valuemin="0" aria-valuemax="5" aria-valuenow="${v}"><span class="rb">${STAR_SVG}</span><span class="fg" style="width:${v / 5 * 100}%">${STAR_SVG}</span></span><span class="rating-num">${v ? v.toFixed(1) : ''}</span>`;
+}
+function restoreRating(r) {
+  const v = state.draft?.rating || 0; r.classList.remove('hov');
+  r.querySelector('.fg').style.width = v / 5 * 100 + '%';
 }
 const CAL_ICON = '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="12" height="11" rx="2.5"/><path d="M2 6.5h12M5.5 1.8v2.6M10.5 1.8v2.6"/></svg>';
 function dpField(f, label, v) {
@@ -1406,7 +1440,7 @@ function renderDrawer() {
   const preview = spineHTML(d, g, { lean: false, sel: false });
   const lookNote = g.mode === 'img' ? (d.ownSpine ? '내가 올린 책등 사진' : 'YES24 책등 사진') : g.mode === 'cover' ? '표지가 보이게 꽂혀 있어요' : '책등 사진이 없어 색으로 보여요';
   dr.innerHTML = `
-  <div class="d-top"><button type="button" class="d-x" data-d="close" aria-label="닫기">${ICON_X}</button><span class="sp"></span><span class="dirty" id="dirty" ${state.dirty ? '' : 'hidden'}>${state.autosave ? '곧 자동 저장돼요' : '저장하지 않은 변경이 있어요'}</span></div>
+  <div class="d-top"><button type="button" class="d-x" data-d="close" aria-label="닫기">${ICON_X}</button><span class="sp"></span><span class="dirty" id="dirty" ${state.dirty ? '' : 'hidden'}>${state.autosave ? '곧 자동 저장돼요' : '저장하지 않은 변경이 있어요'}</span><button type="button" class="d-x d-trash" data-d="delete" aria-label="삭제" title="삭제">${ICON_TRASH}</button><button type="button" class="d-save" data-d="save">저장</button></div>
   <div class="d-body">
     <div class="d-head">
       <div class="d-cover">${d.cover ? `<img src="${esc(d.cover)}" alt="" referrerpolicy="no-referrer">` : ''}</div>
@@ -1435,10 +1469,10 @@ function renderDrawer() {
       <div class="kw" id="kw">${kwList(d).map((k, i) => `<span class="c" style="${kwStyle(k)}">${esc(k)}<button type="button" data-kwrm="${i}" aria-label="${esc(k)} 지우기">×</button></span>`).join('')}<input id="kw-in" placeholder="입력 후 Enter"></div></div>
 
     <div class="sec j-sec"><div class="sec-h"><span class="j-t">감상</span><button type="button" class="j-add" data-d="editreview">${ICON_PEN}${d.review ? '고쳐 쓰기' : '쓰기'}</button></div>
-      ${d.review ? `<button type="button" class="note" data-d="editreview"><span class="nt">${esc(d.review)}</span><span class="nf">${[d.endDate, [...d.review.replace(/\s/g, '')].length + '자'].filter(Boolean).join(' · ')}</span></button>` : `<button type="button" class="note empty" data-d="editreview">${ICON_PEN}<b>이 책은 어떤 책이었나요?</b><span>떠오르는 생각을 가볍게 남겨보세요</span></button>`}</div>
+      ${d.review ? `<button type="button" class="note-t" data-d="editreview">${esc(d.review)}</button>` : ''}</div>
 
     <div class="sec j-sec"><div class="sec-h"><span class="j-t">인상 깊은 문장${d.quotes.length ? `<em>${d.quotes.length}</em>` : ''}</span><button type="button" class="j-add" data-d="addq">${ICON_PLUS}추가</button></div>
-      ${d.quotes.length ? d.quotes.map((q, i) => `<button type="button" class="qv q${i % 4}" data-qedit="${i}"><span class="qt">${esc(q.text)}</span>${q.page ? `<span class="qpg">${esc(q.page)}쪽</span>` : ''}</button>`).join('') : `<button type="button" class="note empty" data-d="addq"><i class="gq">“</i><b>마음에 남은 문장이 있나요?</b><span>밑줄 긋고 싶던 한 줄을 적어두세요</span></button>`}</div>
+      ${d.quotes.map((q, i) => `<button type="button" class="qv q${i % 4}" data-qedit="${i}"><span class="qt">${esc(q.text)}</span>${q.chapter || q.page ? `<span class="qm">${[q.chapter && esc(q.chapter), q.page && esc(q.page) + '쪽'].filter(Boolean).join(' · ')}</span>` : ''}</button>`).join('')}</div>
 
     <details class="sec look-sec" ${state.lookOpen ? 'open' : ''}><summary><span class="lab">책장에서 보이는 모습</span><span class="ln">${lookNote}</span></summary>
       <div class="look"><div class="pv">${preview}</div>
@@ -1449,7 +1483,7 @@ function renderDrawer() {
           <button type="button" class="btn small" data-d="relink">${d.goodsNo ? 'YES24 정보 다시 연결' : 'YES24에서 책 정보 연결'}</button>
         </div></div></details>
   </div>
-  <div class="d-foot"><button type="button" class="d-del" data-d="delete">${ICON_TRASH}삭제</button><span class="sp"></span><button type="button" class="d-save" data-d="save">${ICON_CHECK}저장</button></div>`;
+  `;
   $('.d-body', dr).scrollTop = scrollTop;
 }
 function openBook(id) {
@@ -1944,7 +1978,7 @@ async function runImport() {
 function exportCsv() {
   const cols = [['제목', b => b.title], ['작가', b => b.author], ['분류', b => b.category], ['키워드', b => b.keywords], ['읽기시작한날', b => b.startDate], ['종료한날', b => b.endDate],
     ['읽은기간', b => daysOf(b) ?? ''], ['평점', b => b.rating || ''], ['감상', b => b.review], ['상태', b => b.status], ['쪽수', b => b.pages || ''], ['출판사', b => b.publisher],
-    ['ISBN13', b => b.isbn], ['인상 깊은 문장', b => b.quotes.map(q => q.text + (q.page ? ` (${q.page}쪽)` : '')).join(' / ')], ['메모', b => b.memo]];
+    ['ISBN13', b => b.isbn], ['인상 깊은 문장', b => b.quotes.map(q => q.text + (q.chapter || q.page ? ` (${[q.chapter, q.page && q.page + '쪽'].filter(Boolean).join(', ')})` : '')).join(' / ')], ['메모', b => b.memo]];
   const q = v => { v = String(v ?? ''); return /[",\n\r]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
   const csv = '﻿' + [cols.map(c => q(c[0])).join(','), ...visibleBooks().map(b => cols.map(c => q(c[1](b))).join(','))].join('\r\n');
   const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' })); a.download = `독서기록_${today()}.csv`; a.click(); URL.revokeObjectURL(a.href);
@@ -2144,6 +2178,12 @@ function bind() {
   const dr = $('#drawer');
   dr.addEventListener('input', drawerInput); dr.addEventListener('change', drawerChange);
   initDP(); dr.addEventListener('click', drawerClick); dr.addEventListener('keydown', drawerKey);
+  dr.addEventListener('mousemove', e => {                      // 별 위에 마우스를 올리면 미리 보여줘요
+    const r = e.target.closest('#rating'); if (!r) return;
+    const b = r.getBoundingClientRect(), v = clamp(Math.ceil(((e.clientX - b.left) / b.width) * 10) / 2, 0.5, 5);
+    r.classList.add('hov'); r.querySelector('.fg').style.width = v / 5 * 100 + '%';
+  });
+  dr.addEventListener('mouseout', e => { const r = e.target.closest('#rating'); if (r && !r.contains(e.relatedTarget)) restoreRating(r); });
 
   // 대화상자
   $$('dialog [data-close]').forEach(b => b.onclick = () => b.closest('dialog').close());
@@ -2160,9 +2200,9 @@ function bind() {
   $('#dlg-link').addEventListener('close', () => { $('#link-go').onclick = runLinkAll; });
 
   // 쓰기 팝업
-  $('#w-ok').onclick = writeOk;
+  $('#w-ok').onclick = writeOk; $('#w-more').onclick = writeMore;
   $('#w-del').onclick = () => { if (!confirm('이 문장을 삭제할까요?')) return; const c = writeCtx; writeCtx = null; $('#dlg-write').close(); c?.onDelete?.(); };
-  $('#w-text').addEventListener('keydown', e => { if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); writeOk(); } });
+  $('#dlg-write').addEventListener('keydown', e => { if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); writeOk(); } });
   $('#dlg-write').addEventListener('close', () => { writeCtx = null; });
 
   // 드롭다운

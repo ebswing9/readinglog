@@ -6,7 +6,7 @@
 <title>독서기록</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Serif+KR:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
 :root{
@@ -17,7 +17,7 @@
   --drawer:440px; --pad:32px; --r:14px;
   --sh1:0 1px 2px rgba(20,20,25,.05); --sh2:0 8px 30px rgba(20,20,25,.10);
   --sans:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
-  --serif:"Noto Serif KR","Nanum Myeongjo","Batang",serif;
+  --serif:"Gowun Batang","Noto Serif KR","Nanum Myeongjo","Batang",serif;
 }
 *{box-sizing:border-box}
 html,body{margin:0}
@@ -310,19 +310,154 @@ progress{width:100%;height:10px;accent-color:var(--accent)}
   #drawer{width:100vw}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* ═════════ 감성 레이어: 따뜻한 종이 느낌 · 파스텔 · 작은 움직임 ═════════ */
+:root{
+  --bg:#FBF8F3; --surface:#FFFEFC; --ink:#3A3530; --ink2:#5C554C; --muted:#9B9388; --line:#EEE7DC; --line-d:#E0D7C9;
+  --accent:#A99DD3; --accent-d:#6C6299; --accent-soft:#F2EFFA;
+  --sh1:0 1px 2px rgba(120,100,80,.06); --sh2:0 14px 40px rgba(120,100,80,.13);
+  --ease:cubic-bezier(.22,.9,.3,1);
+}
+body,body.v-stats,body.v-quotes{background:radial-gradient(900px 560px at 4% -6%,#F9E5E8 0,transparent 62%),radial-gradient(780px 520px at 98% 2%,#E6EAF8 0,transparent 62%),radial-gradient(900px 640px at 50% 108%,#E8F3EA 0,transparent 62%),#FBF8F3;background-attachment:fixed;color:var(--ink)}
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.55;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .45  0 0 0 0 .38  0 0 0 0 .3  0 0 0 .06 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+/* 스크롤바: 거의 안 보이게, 움직일 때만 은은하게 */
+*{scrollbar-width:thin;scrollbar-color:rgba(160,148,185,.22) transparent}
+*:hover{scrollbar-color:rgba(160,148,185,.45) transparent}
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(160,148,185,.22);border-radius:99px;border:2px solid transparent;background-clip:padding-box}
+*:hover::-webkit-scrollbar-thumb{background:rgba(160,148,185,.45);background-clip:padding-box;border:2px solid transparent}
+::-webkit-scrollbar-corner{background:transparent}
+::selection{background:#E4DCF6}
+
+/* 상단 */
+.top{background:rgba(251,248,243,.72);border-bottom:1px solid rgba(220,208,190,.45)}
+.brand{display:flex;align-items:center;gap:9px;font:700 21px var(--serif);letter-spacing:-.02em;color:var(--ink)}
+.logo{transition:transform .5s var(--ease)}
+.brand:hover .logo{transform:rotate(-8deg) scale(1.08)}
+.tabs{position:relative;background:rgba(232,223,210,.55)}
+.tab-ind{position:absolute;top:3px;bottom:3px;left:0;width:0;border-radius:8px;background:#fff;box-shadow:0 2px 8px rgba(120,100,80,.14);transition:transform .38s var(--ease),width .38s var(--ease);pointer-events:none}
+.tabs button{position:relative;z-index:1;transition:color .2s}
+.tabs button[aria-selected=true]{background:none;box-shadow:none;color:var(--ink)}
+#q{background:rgba(232,223,210,.5);transition:background .2s,box-shadow .2s,width .3s var(--ease)}
+#q:focus{width:300px}
+#menu{border-radius:16px;animation:pop .2s var(--ease)}
+/* 저장 상태 점 */
+.sync{display:flex;align-items:center;gap:8px;border:0;background:rgba(255,255,255,.55);border-radius:99px;padding:6px 13px 6px 11px;font-size:12.5px;color:var(--muted);box-shadow:inset 0 0 0 1px rgba(220,208,190,.7);transition:background .2s}
+.sync:hover{background:#fff}
+.sync .lbl{min-width:3.4em;text-align:left}
+.sync .dot{width:9px;height:9px;border-radius:50%;background:#9ED3B0;box-shadow:0 0 0 3px rgba(158,211,176,.28);transition:background .3s,box-shadow .3s}
+.sync[data-s=saving] .dot,.sync[data-s=loading] .dot{background:#F2C879;box-shadow:0 0 0 3px rgba(242,200,121,.3);animation:blink 1s ease-in-out infinite}
+.sync[data-s=dirty] .dot{background:#B8A9E6;box-shadow:0 0 0 3px rgba(184,169,230,.3)}
+.sync[data-s=error] .dot{background:#E99A9A;box-shadow:0 0 0 3px rgba(233,154,154,.3);animation:shake .5s}
+.sync[data-s=error]{color:#B5605F}
+.sync[data-s=demo] .dot{background:#CFCAC1;box-shadow:0 0 0 3px rgba(207,202,193,.3)}
+@keyframes blink{50%{opacity:.3;transform:scale(.72)}}
+@keyframes shake{25%{transform:translateX(-2px)}75%{transform:translateX(2px)}}
+@keyframes pop{from{opacity:0;transform:translateY(8px) scale(.97)}}
+@keyframes fadeup{from{opacity:0;transform:translateY(10px)}}
+#view.enter{animation:fadeup .42s var(--ease)}
+
+/* 버튼·칩 */
+.btn{border-radius:999px;background:rgba(255,255,255,.82);border-color:var(--line-d);box-shadow:var(--sh1);transition:transform .18s var(--ease),box-shadow .2s,background .2s,border-color .2s}
+.btn:hover{background:#fff;transform:translateY(-1px);box-shadow:0 8px 18px rgba(120,100,80,.13)}
+.btn:active{transform:translateY(0) scale(.96);box-shadow:var(--sh1)}
+.btn.primary{background:#4B443C;border-color:#4B443C;color:#FFFBF4}
+.btn.primary:hover{background:#5B5248;border-color:#5B5248}
+.btn.ghost,.btn.ghost:hover{box-shadow:none}
+.btn.ghost:hover{transform:none}
+.btn.danger{border-color:#EBCFCB}
+.chip-b{background:rgba(232,223,210,.55);color:var(--ink2);transition:background .2s,color .2s,transform .18s var(--ease)}
+.chip-b:hover{background:rgba(220,208,190,.7);transform:translateY(-1px)}
+.chip-b:active{transform:scale(.95)}
+.chip-b[aria-pressed=true]{background:#4B443C;color:#FFFBF4}
+.banner{background:rgba(242,239,250,.8)}
+
+/* 제목류는 부드러운 명조로 */
+.s-head h2,.q-head h2,.empty h2,.dlg h2,.ghost-in.ttl,.hero .num,.kpi dd,.ring .c b,.d-head .ttl{font-family:var(--serif)}
+.ghost-in.ttl{font-weight:700}
+.hero .num,.kpi dd{font-weight:700}
+td.title .tt span{font-family:var(--serif);font-weight:700;font-size:15.5px}
+.hello{margin:4px 0 12px;font:400 16px var(--serif);color:var(--ink2)}
+.hello b{font-weight:700;color:var(--accent-d)}
+
+/* 책장: 따뜻한 벽 + 밝은 자작나무 선반 + 소품 */
+.wall{padding:30px 12px 14px;border-radius:32px;background:radial-gradient(520px 260px at 12% 0,rgba(255,244,222,.75) 0,transparent 70%),linear-gradient(180deg,rgba(255,255,255,.62),rgba(255,251,244,.38));box-shadow:inset 0 0 0 1px rgba(255,255,255,.85),0 18px 60px rgba(150,125,100,.12)}
+.wall .row{margin-bottom:38px}
+.wall .row:last-child{margin-bottom:10px}
+.plank{position:relative;height:17px;margin:0 6px;border-radius:5px 5px 9px 9px;background:linear-gradient(180deg,#F0E2CC 0,#E3CFB0 55%,#D6BD98 100%);box-shadow:inset 0 1.5px 0 rgba(255,255,255,.75),inset 0 -2px 0 rgba(150,110,70,.18),0 14px 18px -10px rgba(120,90,60,.38)}
+.plank::before{content:"";position:absolute;inset:0;border-radius:inherit;background:repeating-linear-gradient(90deg,rgba(150,110,70,.05) 0 2px,transparent 2px 9px,rgba(255,255,255,.12) 9px 11px,transparent 11px 23px);opacity:.8}
+.plank::after{content:"";position:absolute;left:3%;right:3%;bottom:-18px;height:14px;background:radial-gradient(closest-side,rgba(120,90,60,.2),transparent);filter:blur(3px);z-index:-1}
+.spine{box-shadow:3px 1px 9px rgba(90,70,50,.2);transition:transform .35s var(--ease),box-shadow .3s}
+.spine:hover{transform:translateY(-12px);box-shadow:5px 10px 18px rgba(90,70,50,.28)}
+.spine.sel{transform:translateY(-22px);box-shadow:6px 14px 22px rgba(90,70,50,.3)}
+.spine.lean:hover{transform:rotate(var(--lean,-7deg)) translateY(-8px)}
+.shelf.anim .spine{animation:rise .7s var(--ease) both;animation-delay:calc(var(--i,0)*16ms)}
+@keyframes rise{from{opacity:0;transform:translateY(26px)}}
+.decor{align-self:flex-end;margin-left:auto;margin-right:12px;pointer-events:none;filter:drop-shadow(2px 2px 4px rgba(90,70,50,.14))}
+.decor svg{display:block}
+.decor .sway{transform-origin:35px 62px;animation:sway 5.5s ease-in-out infinite alternate}
+@keyframes sway{from{transform:rotate(-2.2deg)}to{transform:rotate(2.6deg)}}
+.decor .steam path{opacity:0;transform-box:fill-box;animation:steam 3.2s ease-in-out infinite}
+@keyframes steam{0%{opacity:0;transform:translateY(5px)}45%{opacity:.9}100%{opacity:0;transform:translateY(-7px)}}
+
+/* 목록 */
+.tbl-wrap{background:rgba(255,255,255,.62);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-color:rgba(255,255,255,.9);border-radius:22px;box-shadow:0 10px 36px rgba(130,115,100,.09)}
+th{background:rgba(250,247,242,.9);border-bottom-color:var(--line)}
+tbody tr{transition:background .2s}
+tbody tr:hover{background:rgba(242,239,250,.6)}
+td.title img{transition:transform .3s var(--ease)}
+tbody tr:hover td.title img{transform:rotate(-4deg) scale(1.08)}
+th,td{border-bottom-color:rgba(238,231,220,.8)}
+
+/* 통계: 알약 막대 */
+.pc{display:flex;gap:clamp(5px,1.4vw,16px);align-items:flex-end;justify-content:space-between;padding-top:4px}
+.pcol{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:7px}
+.ptrack{position:relative;width:100%;max-width:34px;height:var(--h);border-radius:99px;background:rgba(160,148,185,.12);display:flex;align-items:flex-end;overflow:hidden;transition:transform .3s var(--ease),background .2s}
+.pbar{display:block;width:100%;height:calc(var(--p)*100%);border-radius:99px;background:linear-gradient(180deg,var(--a),var(--b));box-shadow:inset 0 2px 0 rgba(255,255,255,.45);animation:grow .9s var(--ease) both;animation-delay:var(--d)}
+@keyframes grow{from{height:0}}
+.pv{height:16px;font:700 12.5px/16px var(--sans);color:#8A8296;transition:color .2s,transform .3s var(--ease)}
+.pl{font-size:12px;color:var(--muted);white-space:nowrap;transition:color .2s}
+.pcol:hover .ptrack{transform:translateY(-4px);background:rgba(160,148,185,.2)}
+.pcol:hover .pv{color:var(--ink);transform:translateY(-2px)}
+.pcol:hover .pl{color:var(--ink)}
+.pcol.now .pl{color:var(--ink);font-weight:700;position:relative}
+.pcol.now .pl::after{content:"";position:absolute;left:50%;bottom:-6px;width:4px;height:4px;margin-left:-2px;border-radius:50%;background:var(--accent)}
+.pcol.zero .pbar{display:none}
+.pnote{margin:16px 0 0;font:400 14px var(--serif);color:var(--ink2)}
+.pnote b{color:var(--accent-d)}
+.card{transition:transform .3s var(--ease),box-shadow .3s}
+.kpi:hover,.hero:hover{transform:translateY(-3px);box-shadow:0 16px 44px rgba(130,115,160,.15)}
+.qcard{font-family:var(--serif)}
+
+/* 상세 서랍·입력 */
+#drawer{background:rgba(255,254,252,.9);-webkit-backdrop-filter:blur(22px);backdrop-filter:blur(22px);border-left-color:rgba(230,220,205,.7);border-radius:28px 0 0 28px;transition:transform .45s var(--ease)}
+.rating{transition:transform .2s var(--ease)}
+.rating:hover{transform:scale(1.05)}
+.rating-num{font-family:var(--serif)}
+.q textarea.big{font-size:13.5px;line-height:1.7;min-height:92px;padding:10px 13px}
+textarea.big{border-radius:14px}
+input,textarea,select{transition:border-color .2s,box-shadow .2s}
+dialog{border-radius:26px;animation:pop .3s var(--ease)}
+dialog::backdrop{background:rgba(70,60,50,.32);backdrop-filter:blur(4px)}
+#toast{background:#4B443C}
+.spine.sel{outline:none}
+@media (max-width:760px){.sync .lbl{display:none}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
 
 <header class="top">
-  <h1 class="brand">독서기록</h1>
-  <nav class="tabs" role="tablist" aria-label="보기 방식">
+  <h1 class="brand"><svg class="logo" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><rect x="3" y="6" width="4.4" height="14" rx="1.4" fill="#C9BDEB"/><rect x="9" y="3.5" width="4.4" height="16.5" rx="1.4" fill="#F2B8BE"/><rect x="15.4" y="6.4" width="4.4" height="13.6" rx="1.4" fill="#BFE0CF" transform="rotate(12 17.6 20)"/></svg>독서기록</h1>
+  <nav class="tabs" role="tablist" aria-label="보기 방식"><i class="tab-ind"></i>
     <button role="tab" data-view="shelf">책장</button>
     <button role="tab" data-view="list">목록</button>
     <button role="tab" data-view="quotes">문장</button>
     <button role="tab" data-view="stats">통계</button>
   </nav>
   <div class="top-r">
+    <button id="sync" class="sync" type="button" data-s="ok" aria-live="polite"><i class="dot"></i><span class="lbl">저장됨</span></button>
     <input id="q" type="search" placeholder="제목, 작가, 감상 검색  ( / )" aria-label="검색">
     <button id="btn-add" class="btn primary">책 추가</button>
     <button id="btn-menu" class="btn icon" aria-label="더 보기" aria-haspopup="true" aria-expanded="false">···</button>
@@ -332,6 +467,7 @@ progress{width:100%;height:10px;accent-color:var(--accent)}
       <hr>
       <button data-act="linkall">표지·책등 일괄 연결</button>
       <button data-act="refresh">서버에서 다시 불러오기</button>
+      <button data-act="autosave" id="m-auto">자동 저장: 켜짐</button>
       <hr>
       <button data-act="conn">연결 설정</button>
     </div>
@@ -455,12 +591,25 @@ const state = {
   sort: store.get(LS.sort, 'end:asc'),
   scale: store.get(LS.scale, 1.5),
   statsYear: String(new Date().getFullYear()),
-  selected: null, draft: null, dirty: false,
+  selected: null, draft: null, dirty: false, lastEdit: 0, conflict: false, anim: true,
+  autosave: store.get('readlog.autosave', true), net: { w: 0, r: 0 }, sync: { last: Date.now(), err: '' },
   linkTarget: null, badSpine: new Set(), pendingAspect: new Map(), busy: false
 };
 
 /* ════════════════ 서버 통신 ════════════════ */
+const WRITE_ACTIONS = new Set(['add', 'update', 'delete', 'setSetting', 'uploadSpine']);
+/** 서버 호출 — 저장 중/불러오는 중/오류 상태를 상단 점에 알려줘요. */
 async function call(action, payload = {}) {
+  const w = WRITE_ACTIONS.has(action), r = action === 'list';
+  if (w) state.net.w++; if (r) state.net.r++; renderSync();
+  try {
+    const res = await callRaw(action, payload);
+    if (w || r) { state.sync.last = Date.now(); state.sync.err = ''; }
+    return res;
+  } catch (e) { if (w || r) state.sync.err = e.message; throw e; }
+  finally { if (w) state.net.w--; if (r) state.net.r--; renderSync(); }
+}
+async function callRaw(action, payload = {}) {
   if (state.conn?.demo) return mock(action, payload);
   const endpoint = PRESET_URL || state.conn?.url;
   if (!endpoint) throw new Error('먼저 연결 설정에서 웹앱 주소를 넣어주세요.');
@@ -496,7 +645,7 @@ function normBook(b) {
     cover: ts(b.cover), spine: ts(b.spine), spineAspect: toNum(b.spineAspect), color: ts(b.color),
     heightMm: toNum(b.heightMm), thicknessMm: toNum(b.thicknessMm), ownSpine: ts(b.ownSpine),
     faceOut: b.faceOut === true || b.faceOut === 1 || b.faceOut === '1' || b.faceOut === 'TRUE' || b.faceOut === 'true',
-    quotes: parseQuotes(b.quotes), memo: ts(b.memo), created: ts(b.created)
+    quotes: parseQuotes(b.quotes), memo: ts(b.memo), created: ts(b.created), updated: ts(b.updated)
   };
 }
 function toWire(b) {
@@ -641,11 +790,11 @@ function leanInfo(b) {
   return { deg: 4 + mix(k + '#a') * 18, dir: mix(k + '#d') < 0.5 ? -1 : 1 };
 }
 const leanShift = (b, H) => Math.round(H * Math.sin(leanInfo(b).deg * Math.PI / 180));
-function spineHTML(b, g, { lean = true, sel = true } = {}) {
+function spineHTML(b, g, { lean = true, sel = true, i = 0 } = {}) {
   const isLean = lean && b.status === '읽는 중';
   const L = isLean ? leanInfo(b) : null;
   const cls = ['spine', g.mode, isLean && 'lean', isLean && L.dir > 0 && 'lean-r', b.status === '읽을 책' && 'todo', sel && state.selected === b.id && 'sel'].filter(Boolean).join(' ');
-  let style = `width:${g.W}px;height:${g.H}px;`;
+  let style = `width:${g.W}px;height:${g.H}px;--i:${Math.min(i, 60)};`;
   if (isLean) style += `--lean:${(L.dir * L.deg).toFixed(1)}deg;margin-${L.dir < 0 ? 'left' : 'right'}:${leanShift(b, g.H)}px;`;   // 왼쪽 책에 기대도록, 기울어진 만큼 오른쪽으로 비켜 꽂아요
   let inner = '';
   if (g.mode === 'img') inner = `<img src="${esc(g.img)}" alt="" referrerpolicy="no-referrer" draggable="false" data-mode="spine">`;
@@ -661,6 +810,8 @@ function spineHTML(b, g, { lean = true, sel = true } = {}) {
 /* ════════════════ 화면: 상단·도구줄 ════════════════ */
 function renderTabs() {
   $$('.tabs button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.view === state.view)));
+  const sel = $('.tabs button[aria-selected=true]'), ind = $('.tab-ind');
+  if (sel && ind) { ind.style.width = sel.offsetWidth + 'px'; ind.style.transform = `translateX(${sel.offsetLeft}px)`; }
 }
 function renderToolbar() {
   const tb = $('#toolbar');
@@ -687,24 +838,39 @@ function emptyHTML() {
   return `<div class="empty"><h2>책장이 비어 있어요</h2><p>책을 검색해서 꽂거나, 쓰던 엑셀 파일을 가져오세요.</p>
   <div class="acts"><button class="btn primary" data-act="add">책 추가</button><button class="btn" data-act="import">엑셀·CSV 가져오기</button></div></div>`;
 }
+const hashStr = k => { let h = 2166136261; for (let i = 0; i < k.length; i++) { h ^= k.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; };
+const DECOR = ['plant', 'stack', 'mug', 'plant', 'mug', 'stack'];
+function decorHTML(kind) {
+  const svg = {
+    plant: '<svg viewBox="0 0 70 96" width="64" height="88"><g class="sway"><path d="M35 62C33 44 22 34 10 32c2 14 10 26 25 30z" fill="#A9D6B8"/><path d="M35 62C38 40 50 28 63 25c-1 16-10 31-28 37z" fill="#8CC7A0"/><path d="M35 64C35 48 33 34 35 18c5 12 5 30 0 46z" fill="#BCE2C8"/></g><path d="M18 62h34l-4 30a4 4 0 0 1-4 3H26a4 4 0 0 1-4-3z" fill="#EBBFAE"/><rect x="16" y="58" width="38" height="8" rx="4" fill="#F4D0C1"/></svg>',
+    stack: '<svg viewBox="0 0 84 58" width="80" height="55"><rect x="5" y="42" width="74" height="14" rx="3.5" fill="#CBBFEC"/><rect x="5" y="43" width="74" height="3" rx="1.5" fill="#fff" opacity=".4"/><rect x="11" y="28" width="62" height="14" rx="3.5" fill="#F4BFC6"/><rect x="11" y="29" width="62" height="3" rx="1.5" fill="#fff" opacity=".4"/><rect x="8" y="14" width="66" height="14" rx="3.5" fill="#C1E2D1"/><rect x="8" y="15" width="66" height="3" rx="1.5" fill="#fff" opacity=".4"/><circle cx="41" cy="9" r="5" fill="#F7E3A6"/></svg>',
+    mug: '<svg viewBox="0 0 60 66" width="56" height="62"><g class="steam" fill="none" stroke="#D5CCE6" stroke-width="2.6" stroke-linecap="round"><path d="M21 20c-4-5 4-8 0-14"/><path d="M31 20c-4-5 4-8 0-14" style="animation-delay:.9s"/></g><path d="M10 26h34v18a14 14 0 0 1-14 14h-6a14 14 0 0 1-14-14z" fill="#F7E3B3"/><path d="M44 30h3.5a6.5 6.5 0 0 1 0 13H43" fill="none" stroke="#F7E3B3" stroke-width="4.4"/><ellipse cx="27" cy="27" rx="17" ry="3.4" fill="#E6CD92"/></svg>'
+  }[kind];
+  return `<div class="decor decor-${kind}" aria-hidden="true">${svg}</div>`;
+}
 function renderShelf() {
   const host = $('#view');
   if (!state.books.length) { host.innerHTML = emptyHTML(); return; }
   const list = visibleBooks();
   if (!list.length) { host.innerHTML = '<p class="empty">조건에 맞는 책이 없어요.</p>'; return; }
-  const avail = host.clientWidth - 2 * 28;
+  const avail = host.clientWidth - 2 * 12 - 2 * 28;
   // 읽는 중인 책은 "전체" 보기에서만 기울여요. "읽는 중" 탭이나 다른 탭에서는 똑바로 서요.
   const leanOk = state.status === 'all';
   const rows = []; let cur = [], w = 0;
   list.forEach(b => {
     const g = geom(b), extra = leanOk && b.status === '읽는 중' ? leanShift(b, g.H) : 0, need = g.W + extra + 1;
-    if (cur.length && w + need > avail) { rows.push(cur); cur = []; w = 0; }
+    if (cur.length && w + need > avail) { rows.push({ items: cur, w }); cur = []; w = 0; }
     cur.push([b, g]); w += need;
   });
-  if (cur.length) rows.push(cur);
-  host.innerHTML = '<div class="shelf">' + rows.map(r => {
-    const mh = Math.max(...r.map(x => x[1].H));
-    return `<section class="row"><div class="books" style="height:${mh + 30}px">${r.map(([b, g]) => spineHTML(b, g, { lean: leanOk })).join('')}</div><div class="plank"></div></section>`;
+  if (cur.length) rows.push({ items: cur, w });
+  const yr = String(new Date().getFullYear()), doneY = state.books.filter(b => b.status === '완독' && (b.endDate || '').startsWith(yr)).length, reading = state.books.filter(b => b.status === '읽는 중').length;
+  const hello = state.status === 'all' && !state.q ? `<p class="hello">올해 <b>${doneY}권</b>을 덮었고, ${reading ? `지금은 <b>${reading}권</b>을 읽고 있어요.` : '지금 읽고 있는 책은 없어요.'}</p>` : '';
+  const anim = state.anim; state.anim = false;
+  let idx = 0;
+  host.innerHTML = hello + `<div class="shelf wall${anim ? ' anim' : ''}">` + rows.map((r, ri) => {
+    const mh = Math.max(...r.items.map(x => x[1].H));
+    const kind = avail - r.w >= 130 ? DECOR[(ri + hashStr(String(r.items[0][0].id))) % DECOR.length] : '';
+    return `<section class="row"><div class="books" style="height:${mh + 30}px">${r.items.map(([b, g]) => spineHTML(b, g, { lean: leanOk, i: idx++ })).join('')}${kind ? decorHTML(kind) : ''}</div><div class="plank"></div></section>`;
   }).join('') + '</div>';
 }
 const relayoutShelf = debounce(() => { if (state.view === 'shelf') renderShelf(); }, 140);
@@ -774,6 +940,16 @@ function renderQuotes() {
 }
 
 /* ════════════════ 화면: 통계 ════════════════ */
+function pillChart(items, { h = 150, min = 4 } = {}) {
+  const mx = Math.max(min, ...items.map(i => i.v));
+  return `<div class="pc" style="--h:${h}px">${items.map((it, k) => `<div class="pcol${it.now ? ' now' : ''}${it.v ? '' : ' zero'}" title="${esc(it.title)}" style="--p:${it.v ? Math.max(0.1, it.v / mx).toFixed(3) : 0};--d:${k * 40}ms;--a:${it.c1};--b:${it.c2}"><span class="pv">${it.v || ''}</span><div class="ptrack"><i class="pbar"></i></div><span class="pl">${esc(it.label)}</span></div>`).join('')}</div>`;
+}
+function countUp(el) {
+  const to = +el.dataset.count; if (!to || matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+  const t0 = performance.now(), D = 800;
+  const step = t => { const k = Math.min(1, (t - t0) / D), e = 1 - Math.pow(1 - k, 3); el.textContent = Math.round(to * e).toLocaleString(); if (k < 1) requestAnimationFrame(step); };
+  el.textContent = '0'; requestAnimationFrame(step);
+}
 function renderStats() {
   const host = $('#view');
   if (!state.books.length) { host.innerHTML = emptyHTML(); return; }
@@ -791,19 +967,10 @@ function renderStats() {
   let labels, counts;
   if (yr === 'all') { labels = years.slice().reverse(); counts = labels.map(y => done.filter(b => b.endDate.startsWith(y)).length); }
   else { labels = Array.from({ length: 12 }, (_, i) => (i + 1) + '월'); counts = Array(12).fill(0); done.forEach(b => counts[+b.endDate.slice(5, 7) - 1]++); }
-  const W = 640, H = 210, top = 22, base = 176, n = labels.length, slot = (W - 36) / n, bw = Math.min(34, slot * 0.58);
-  const mx = Math.max(4, Math.ceil(Math.max(...counts) / 2) * 2), ph = base - top;
-  const curM = yr === curY ? new Date().getMonth() : -1;
-  const ticks = [0, 0.5, 1].map(f => Math.round(mx * f));
-  const gridL = ticks.map(t => { const y = base - t / mx * ph; return `<line class="grid" x1="30" x2="${W}" y1="${y.toFixed(1)}" y2="${y.toFixed(1)}"/><text x="22" y="${(y + 4).toFixed(1)}" text-anchor="end">${t}</text>`; }).join('');
-  const bars = counts.map((c, i) => {
-    const h = c / mx * ph, x = 36 + i * slot + (slot - bw) / 2, y = base - h, r = Math.min(8, bw / 2, h);
-    const shape = c
-      ? `<path class="b" d="M${x.toFixed(1)} ${base}V${(y + r).toFixed(1)}Q${x.toFixed(1)} ${y.toFixed(1)} ${(x + r).toFixed(1)} ${y.toFixed(1)}H${(x + bw - r).toFixed(1)}Q${(x + bw).toFixed(1)} ${y.toFixed(1)} ${(x + bw).toFixed(1)} ${(y + r).toFixed(1)}V${base}Z" fill="url(#gBar)"/>`
-      : `<rect x="${x.toFixed(1)}" y="${base - 3}" width="${bw.toFixed(1)}" height="3" rx="1.5" fill="rgba(120,110,150,.15)"/>`;
-    return `<g><title>${labels[i]} ${c}권</title><rect x="${(x - 4).toFixed(1)}" y="${top}" width="${(bw + 8).toFixed(1)}" height="${ph + 20}" fill="transparent"/>${shape}${c ? `<text class="val" x="${(x + bw / 2).toFixed(1)}" y="${(y - 7).toFixed(1)}" text-anchor="middle">${c}</text>` : ''}<text x="${(x + bw / 2).toFixed(1)}" y="${base + 22}" text-anchor="middle" ${i === curM ? 'style="fill:var(--ink);font-weight:700"' : ''}>${yr === 'all' ? labels[i] : labels[i].replace('월', '')}</text></g>`;
-  }).join('');
-  const monthly = `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="${yr === 'all' ? '연도별' : '월별'} 읽은 권수"><defs><linearGradient id="gBar" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#D8D1F1"/><stop offset="1" stop-color="#B3A8DC"/></linearGradient></defs>${gridL}${bars}</svg>`;
+  const MCOL = [['#F9D5DC', '#F2A9B8'], ['#FBE0D0', '#F5BA9C'], ['#FCEBC4', '#F4D187'], ['#E9F0BF', '#CFE08A'], ['#CDEBCF', '#9FD5A7'], ['#C6EBE0', '#8DD3BD'], ['#C5E6F2', '#90C9E3'], ['#CCD9F5', '#9DB4EA'], ['#DAD1F4', '#B8A8E6'], ['#EBD0F0', '#D9A9E3'], ['#F5CFE6', '#EBA3CF'], ['#F7D0D0', '#EEA3A3']];
+  const nowM = yr === curY ? new Date().getMonth() : -1, mxC = Math.max(...counts), peakI = counts.indexOf(mxC);
+  const mItems = counts.map((c, i) => ({ v: c, label: yr === 'all' ? labels[i] : String(i + 1), title: `${labels[i]} · ${c}권`, now: i === nowM, c1: yr === 'all' ? '#E4DCF6' : MCOL[i][0], c2: yr === 'all' ? '#B8A8E6' : MCOL[i][1] }));
+  const monthly = pillChart(mItems, { h: 150 }) + (mxC > 0 ? `<p class="pnote">가장 많이 읽은 ${yr === 'all' ? '해' : '달'}는 <b>${labels[peakI]}</b>, ${mxC}권이에요.</p>` : '<p class="pnote">아직 완독한 책이 없어요.</p>');
 
   // 분류별
   const cat = {}; done.forEach(b => { const c = b.category || '분류 없음'; cat[c] = (cat[c] || 0) + 1; });
@@ -815,15 +982,7 @@ function renderStats() {
   // 평점 분포 (목록의 평점 색과 같은 색)
   const dist = Array(10).fill(0); rated.forEach(b => dist[Math.round(b.rating * 2) - 1]++);
   const dmax = Math.max(1, ...dist);
-  const DW = 440, dslot = (DW - 8) / 10, dbw = dslot * 0.64, dbase = 124, dph = 98;
-  const distBars = dist.map((c, i) => {
-    const r = (i + 1) / 2, h = c / dmax * dph, x = 4 + i * dslot + (dslot - dbw) / 2, y = dbase - h, rr = Math.min(6, dbw / 2, h), col = `var(--c${rTier(r)}b)`;
-    const shape = c
-      ? `<path class="b" d="M${x.toFixed(1)} ${dbase}V${(y + rr).toFixed(1)}Q${x.toFixed(1)} ${y.toFixed(1)} ${(x + rr).toFixed(1)} ${y.toFixed(1)}H${(x + dbw - rr).toFixed(1)}Q${(x + dbw).toFixed(1)} ${y.toFixed(1)} ${(x + dbw).toFixed(1)} ${(y + rr).toFixed(1)}V${dbase}Z" fill="${col}"/>`
-      : `<rect x="${x.toFixed(1)}" y="${dbase - 3}" width="${dbw.toFixed(1)}" height="3" rx="1.5" fill="#E8E7E3"/>`;
-    return `<g><title>${r.toFixed(1)}점 ${c}권</title><rect x="${(x - 2).toFixed(1)}" y="10" width="${(dbw + 4).toFixed(1)}" height="130" fill="transparent"/>${shape}${c ? `<text class="val" x="${(x + dbw / 2).toFixed(1)}" y="${(y - 6).toFixed(1)}" text-anchor="middle">${c}</text>` : ''}<text x="${(x + dbw / 2).toFixed(1)}" y="${dbase + 20}" text-anchor="middle" style="font-size:11px">${r.toFixed(1)}</text></g>`;
-  }).join('');
-  const distSvg = `<svg class="chart" viewBox="0 0 ${DW} 150" role="img" aria-label="평점 분포"><line class="grid" x1="0" x2="${DW}" y1="${dbase}" y2="${dbase}"/>${distBars}</svg>`;
+  const distSvg = pillChart(dist.map((c, i) => { const r = (i + 1) / 2, t = rTier(r); return { v: c, label: r.toFixed(1), title: `${r.toFixed(1)}점 · ${c}권`, c1: `var(--c${t}b)`, c2: `var(--c${t})` }; }), { h: 112, min: 3 });
   const legend = [[1, '1.5 이하'], [2, '2점대'], [3, '3점대'], [4, '4점대'], [5, '5점']].map(([t, l]) => `<span><i style="background:var(--c${t}b)"></i>${l}</span>`).join('');
 
   // 목표 링
@@ -839,11 +998,11 @@ function renderStats() {
   host.innerHTML = `<div class="stats">
     <div class="s-head"><h2>통계</h2>${yearSel}</div>
     <div class="card hero">
-      <div><div class="lab">${label} 읽은 책</div><div class="num"><span class="n">${done.length}</span><small>권</small></div>${goal && yr !== 'all' ? `<div class="sub">목표까지 ${Math.max(0, goal - done.length)}권 남았어요</div>${goalLink}` : ''}</div>
+      <div><div class="lab">${label} 읽은 책</div><div class="num"><span class="n" data-count="${done.length}">${done.length}</span><small>권</small></div>${goal && yr !== 'all' ? `<div class="sub">목표까지 ${Math.max(0, goal - done.length)}권 남았어요</div>${goalLink}` : ''}</div>
       ${ring}
     </div>
     <dl class="kpis">
-      <div class="card kpi"><dt>읽은 쪽수</dt><dd>${pages ? pages.toLocaleString() + '<small>쪽</small>' : '-'}</dd></div>
+      <div class="card kpi"><dt>읽은 쪽수</dt><dd>${pages ? `<span data-count="${pages}">${pages.toLocaleString()}</span><small>쪽</small>` : '-'}</dd></div>
       <div class="card kpi"><dt>평균 평점</dt><dd>${avgR ? `<span style="color:var(--c${rTier(avgR)})">★ ${avgR.toFixed(2)}</span>` : '-'}</dd></div>
       <div class="card kpi"><dt>평균 읽은 기간</dt><dd>${avgD ? avgD.toFixed(1) + '<small>일</small>' : '-'}</dd></div>
       <div class="card kpi"><dt>읽는 중</dt><dd>${state.books.filter(b => b.status === '읽는 중').length}<small>권</small></dd></div>
@@ -855,6 +1014,7 @@ function renderStats() {
       <div class="card"><h3>평점 분포</h3>${rated.length ? `${distSvg}<div class="avg-note">${legend}</div>` : '<p class="muted">평점을 남긴 책이 아직 없어요.</p>'}</div>
     </div>
   </div>`;
+  $$('[data-count]', host).forEach(countUp);
 }
 
 /* ════════════════ 전체 그리기 ════════════════ */
@@ -866,7 +1026,10 @@ function renderAll() {
   else if (state.view === 'quotes') renderQuotes();
   else renderStats();
 }
-function setView(v) { state.view = v; renderAll(); }
+function setView(v) {
+  state.view = v; state.anim = true; renderAll();
+  const h = $('#view'); h.classList.remove('enter'); void h.offsetWidth; h.classList.add('enter');
+}
 
 /* ════════════════ 상세 서랍 ════════════════ */
 function ratingHTML(v) {
@@ -885,7 +1048,7 @@ function renderDrawer() {
   const preview = spineHTML(d, g, { lean: false, sel: false });
   const lookNote = g.mode === 'img' ? (d.ownSpine ? '내가 올린 책등 사진' : 'YES24 책등 사진') : g.mode === 'cover' ? '표지가 보이게 꽂혀 있어요' : '책등 사진이 없어 색으로 보여요';
   dr.innerHTML = `
-  <div class="d-top"><button class="btn small" data-d="close">닫기</button><span class="sp"></span><span class="dirty" id="dirty" ${state.dirty ? '' : 'hidden'}>저장하지 않은 변경이 있어요</span></div>
+  <div class="d-top"><button class="btn small" data-d="close">닫기</button><span class="sp"></span><span class="dirty" id="dirty" ${state.dirty ? '' : 'hidden'}>${state.autosave ? '곧 자동 저장돼요' : '저장하지 않은 변경이 있어요'}</span></div>
   <div class="d-body">
     <div class="d-head">
       <div class="d-cover">${d.cover ? `<img src="${esc(d.cover)}" alt="" referrerpolicy="no-referrer">` : ''}</div>
@@ -916,7 +1079,7 @@ function renderDrawer() {
     <div class="sec"><label for="f-review">감상</label><textarea id="f-review" class="big" data-f="review" rows="9">${esc(d.review)}</textarea></div>
 
     <div class="sec"><span class="lab">인상 깊은 문장</span>
-      ${d.quotes.map((q, i) => `<div class="q"><textarea class="big" data-q="${i}" rows="4" placeholder="문장" aria-label="문장 ${i + 1}">${esc(q.text)}</textarea><div class="qf"><label class="qp"><input data-qp="${i}" value="${esc(q.page)}" inputmode="numeric" placeholder="00" aria-label="쪽수"><span>쪽</span></label><button type="button" class="btn ghost small" data-qrm="${i}">삭제</button></div></div>`).join('')}
+      ${d.quotes.map((q, i) => `<div class="q"><textarea class="big" data-q="${i}" rows="3" placeholder="문장" aria-label="문장 ${i + 1}">${esc(q.text)}</textarea><div class="qf"><label class="qp"><input data-qp="${i}" value="${esc(q.page)}" inputmode="numeric" placeholder="00" aria-label="쪽수"><span>쪽</span></label><button type="button" class="btn ghost small" data-qrm="${i}">삭제</button></div></div>`).join('')}
       <button type="button" class="btn small" data-d="addq">문장 추가</button></div>
 
     <details class="sec look-sec" ${state.lookOpen ? 'open' : ''}><summary><span class="lab">책장에서 보이는 모습</span><span class="ln">${lookNote}</span></summary>
@@ -934,14 +1097,14 @@ function renderDrawer() {
 function openBook(id) {
   const b = bookById(id); if (!b) return;
   if (state.dirty && state.selected !== id && !confirm('저장하지 않은 변경이 있어요. 버리고 다른 책을 열까요?')) return;
-  state.selected = id; state.draft = JSON.parse(JSON.stringify(b)); state.dirty = false; state.lookOpen = false; closeDP();
+  state.selected = id; state.draft = JSON.parse(JSON.stringify(b)); state.dirty = false; state.conflict = false; state.lookOpen = false; closeDP(); renderSync();
   document.body.classList.add('drawer-open'); $('#drawer').setAttribute('aria-hidden', 'false');
   renderDrawer(); markSelected();
 }
 function closeDrawer(force = false) {
   closeDP();
   if (!force && state.dirty && !confirm('저장하지 않은 변경이 있어요. 닫을까요?')) return false;
-  state.selected = null; state.draft = null; state.dirty = false;
+  state.selected = null; state.draft = null; state.dirty = false; state.conflict = false; renderSync();
   document.body.classList.remove('drawer-open'); $('#drawer').setAttribute('aria-hidden', 'true');
   markSelected(); return true;
 }
@@ -953,20 +1116,56 @@ function markSelected() {
     $(`.spine[data-id="${id}"]`)?.classList.add('sel'); $(`tr[data-id="${id}"]`)?.classList.add('sel');
   }
 }
-function setDirty(v = true) { state.dirty = v; const e = $('#dirty'); if (e) e.hidden = !v; }
+function setDirty(v = true) { state.dirty = v; if (v) state.lastEdit = Date.now(); const e = $('#dirty'); if (e) e.hidden = !v; renderSync(); }
 
-async function saveDraft({ quiet = false } = {}) {
+async function saveDraft({ quiet = false, auto = false } = {}) {
   const d = state.draft; if (!d) return;
-  if (!d.title.trim()) { toast('제목을 입력해주세요.'); return; }
+  if (!d.title.trim()) { if (!auto) toast('제목을 입력해주세요.'); return; }
+  if (state.conflict) {
+    if (auto) return;                                    // 자동 저장은 충돌 중에는 멈춰요
+    if (!confirm('다른 기기에서 이 책이 먼저 수정됐어요. 지금 내용으로 덮어쓸까요?')) return;
+  }
+  const snap = JSON.stringify(d);
   try {
     const r = await call('update', { patches: [toWire(d)] });
     const saved = r.books?.[0] ? normBook(r.books[0]) : d;
     const i = state.books.findIndex(b => b.id === d.id);
     if (i >= 0) state.books[i] = { ...saved, quotes: d.quotes.filter(q => q.text.trim()) };
-    state.draft = JSON.parse(JSON.stringify(state.books[i])); setDirty(false); saveCache();
-    renderAll(); renderDrawer(); markSelected();
-    if (!quiet) toast('저장했어요');
-  } catch (e) { toast(e.message, 5000); }
+    state.conflict = false; saveCache();
+    if (state.draft && state.draft.id === d.id) {
+      if (auto && JSON.stringify(state.draft) !== snap) { state.draft.updated = saved.updated; }   // 저장하는 사이 더 고쳤으면 그대로 두고 다음에 또 저장해요
+      else { state.draft = JSON.parse(JSON.stringify(state.books[i])); setDirty(false); }
+    }
+    renderAll(); markSelected();
+    if (!auto) renderDrawer();
+    if (!quiet && !auto) toast('저장했어요');
+  } catch (e) { if (!auto) toast(e.message, 5000); }
+}
+function autoSaveTick() {
+  if (!state.autosave || !state.dirty || !state.draft || state.net.w || state.conflict) return;
+  if (Date.now() - state.lastEdit < 3500) return;       // 타이핑이 잠깐 멈췄을 때 저장해요
+  saveDraft({ auto: true });
+}
+function toggleAuto() {
+  state.autosave = !state.autosave; store.set('readlog.autosave', state.autosave);
+  renderMenuAuto(); renderSync(); const e = $('#dirty'); if (e) e.textContent = state.autosave ? '곧 자동 저장돼요' : '저장하지 않은 변경이 있어요';
+  toast(state.autosave ? '자동 저장을 켰어요' : '자동 저장을 껐어요. 저장 버튼을 눌러주세요.');
+}
+const renderMenuAuto = () => { const e = $('#m-auto'); if (e) e.textContent = '자동 저장: ' + (state.autosave ? '켜짐' : '꺼짐'); };
+const agoText = t => { const m = Math.floor((Date.now() - t) / 60000); return m < 1 ? '방금' : m < 60 ? m + '분 전' : Math.floor(m / 60) + '시간 전'; };
+/** 상단의 작은 점: 초록=저장됨, 노랑 깜빡=저장/불러오는 중, 보라=저장 전, 빨강=연결 문제 */
+function renderSync() {
+  const el = $('#sync'); if (!el) return;
+  let s = 'ok', t = '저장됨';
+  if (!state.conn) { s = 'demo'; t = '연결 전'; }
+  else if (state.conn.demo) { s = 'demo'; t = '샘플'; }
+  else if (state.net.w) { s = 'saving'; t = '저장 중'; }
+  else if (state.net.r) { s = 'loading'; t = '불러오는 중'; }
+  else if (navigator.onLine === false) { s = 'error'; t = '오프라인'; }
+  else if (state.sync.err) { s = 'error'; t = '연결 문제'; }
+  else if (state.dirty) { s = 'dirty'; t = state.autosave ? '곧 저장' : '저장 전'; }
+  el.dataset.s = s; el.querySelector('.lbl').textContent = t;
+  el.title = s === 'error' ? `${state.sync.err || '인터넷에 연결되어 있지 않아요.'} — 눌러서 다시 시도` : s === 'demo' ? '샘플 데이터예요' : `마지막 동기화 ${agoText(state.sync.last)} · 누르면 최신 내용을 불러와요`;
 }
 async function deleteDraft() {
   const d = state.draft; if (!d) return;
@@ -1393,19 +1592,39 @@ function exportCsv() {
 
 /* ════════════════ 불러오기·캐시 ════════════════ */
 function saveCache() { if (!state.conn?.demo) store.set(LS.cache, { books: state.books, settings: state.settings, url: state.conn?.url }); }
-async function refresh({ quiet = false } = {}) {
-  if (!state.conn) return;
-  if (!quiet && !state.books.length) banner('서버에서 불러오는 중…');
+async function refresh({ quiet = false, bg = false } = {}) {
+  if (!state.conn || (bg && (state.conn.demo || state.net.w || state.net.r))) return;
+  if (!quiet && !bg && !state.books.length) banner('서버에서 불러오는 중…');
   try {
     const r = await call('list');
+    if (bg) {                                            // 바뀐 게 없으면 화면을 건드리지 않아요
+      const local = new Map(state.books.map(b => [b.id, b.updated]));
+      const same = r.books.length === state.books.length && r.books.every(b => local.get(String(b.id)) === String(b.updated ?? '')) && JSON.stringify(r.settings || {}) === JSON.stringify(state.settings);
+      if (same) return;
+    }
     state.books = r.books.map(normBook); state.settings = r.settings || {};
     const fixes = [];                                   // 분류 앞에 붙은 '국내도서-'는 한 번 정리해서 시트에도 반영해요
     state.books.forEach(b => { const c = cleanCategory(b.category); if (c !== b.category) { b.category = c; fixes.push({ id: b.id, category: c }); } });
     saveCache();
     (async () => { for (let i = 0; i < fixes.length; i += 100) { try { await call('update', { patches: fixes.slice(i, i + 100) }); } catch { break; } } })();
     banner(state.conn.demo ? '샘플 데이터로 둘러보는 중이에요. 실제 시트와는 연결되어 있지 않아요.' : '', false, state.conn.demo ? '연결 설정' : '');
-  } catch (e) { banner(e.message, true, '다시 시도'); }
+    if (state.dirty && state.draft) {                    // 내가 고치는 동안 다른 기기에서 같은 책이 바뀌었는지 확인해요
+      const cur = bookById(state.draft.id);
+      if (cur && cur.updated !== state.draft.updated) { if (!state.conflict) toast('다른 기기에서 이 책이 먼저 수정됐어요. 저장하면 그 내용을 덮어써요.', 7000); state.conflict = true; }
+    }
+  } catch (e) { if (!bg) banner(e.message, true, '다시 시도'); }
   renderAll(); if (state.selected && !state.dirty) { const b = bookById(state.selected); if (b) { state.draft = JSON.parse(JSON.stringify(b)); renderDrawer(); } }
+}
+function startBackground() {
+  setInterval(autoSaveTick, 2500);
+  setInterval(() => { if (!document.hidden) refresh({ bg: true }); }, 45000);
+  setInterval(renderSync, 30000);
+  let lastPull = 0;
+  const pull = () => { if (document.hidden || Date.now() - lastPull < 8000) return; lastPull = Date.now(); refresh({ bg: true }); };
+  document.addEventListener('visibilitychange', pull); addEventListener('focus', pull);
+  addEventListener('online', () => { renderSync(); refresh({ bg: true }); }); addEventListener('offline', renderSync);
+  $('#sync').onclick = async () => { if (state.conn && !state.conn.demo) { await refresh({ quiet: true }); if (!state.sync.err) toast('최신 상태예요'); } };
+  renderMenuAuto(); renderSync();
 }
 
 /* ════════════════ 연결 설정 ════════════════ */
@@ -1527,7 +1746,7 @@ function bind() {
     const a = e.target.closest('[data-act]'); if (!a) return;
     menu.hidden = true;
     ({ add: () => openAdd(), import: () => { importBooks = []; $('#imp-prev').innerHTML = ''; $('#imp-file').value = ''; $('#imp-go').disabled = true; $('#imp-go').textContent = '가져오기'; $('#imp-hint').textContent = ''; $('#dlg-import').showModal(); },
-      export: exportCsv, linkall: openLinkAll, refresh: () => refresh(), conn: openConn, goal: setGoal }[a.dataset.act] || (() => { }))();
+      export: exportCsv, autosave: toggleAuto, linkall: openLinkAll, refresh: () => refresh(), conn: openConn, goal: setGoal }[a.dataset.act] || (() => { }))();
   });
 
   // 도구줄
@@ -1548,7 +1767,8 @@ function bind() {
   });
   view.addEventListener('change', e => { if (e.target.id === 'sel-stats-year') { state.statsYear = e.target.value; renderStats(); } });
   view.addEventListener('load', onSpineEvent, true); view.addEventListener('error', onSpineEvent, true);
-  let lastW = 0;
+  let lastW = view.clientWidth;
+  document.fonts?.ready.then(renderTabs); addEventListener('resize', renderTabs);
   new ResizeObserver(() => { const w = view.clientWidth; if (Math.abs(w - lastW) > 4) { lastW = w; relayoutShelf(); } }).observe(view);
   $('#banner').addEventListener('click', e => { if (e.target.closest('[data-banner]')) { state.conn?.demo ? openConn() : refresh(); } });
 
@@ -1594,6 +1814,7 @@ async function setGoal() {
   if (c && !state.conn.demo && c.url === state.conn.url) { state.books = (c.books || []).map(normBook); state.settings = c.settings || {}; }
   renderAll(); refresh();
 })();
+startBackground();
 </script>
 </body>
 </html>

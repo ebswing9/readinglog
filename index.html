@@ -684,27 +684,24 @@ html,body{overflow-x:clip}
 .spine.flat .ft{position:absolute;inset:0;display:flex;align-items:center;gap:.9em;padding:0 14px 0 24px;white-space:nowrap;overflow:hidden;font-family:var(--serif);color:var(--sp-ink,#fff)}
 .spine.flat .ft b{font-weight:700;min-width:0;overflow:hidden;text-overflow:ellipsis}
 .spine.flat .ft i{font-style:normal;font-size:.84em;opacity:.75;flex:none}
-.spine.stop{transform-origin:50% 100%;transform:translateY(-4px) scale(.93);filter:saturate(.55) brightness(.95);box-shadow:1px 1px 4px rgba(70,45,20,.14)}
-.spine.stop:hover{transform:translateY(-12px);filter:none}
-.spine.stop.sel{transform:translateY(-22px);filter:none}
 
 /* 별점: 파스텔 그라데이션 */
 .rating .rb{color:#ECE7F2}
 .rating .fg .rs path{fill:url(#starg);stroke:url(#starg)}
 
 /* 감상 / 문장: 늘 보이는 반투명 카드 */
-.note-t{display:block;width:100%;text-align:left;border:1px solid rgba(255,255,255,.85);border-radius:20px;padding:18px 20px;background:linear-gradient(150deg,rgba(255,255,255,.8),rgba(246,240,252,.64));box-shadow:0 10px 26px -16px rgba(140,120,185,.38),inset 0 1px 0 rgba(255,255,255,.9);color:#5A5470;font:400 15px/1.95 var(--serif);white-space:pre-wrap;word-break:break-word;text-wrap:pretty;transition:box-shadow .25s,background .25s}
-.note-t:hover{background:linear-gradient(150deg,rgba(255,255,255,.92),rgba(246,240,252,.76));box-shadow:0 12px 28px -16px rgba(140,120,185,.48),inset 0 1px 0 #fff}
-.qv{--g1:#EEE7FA;--g2:#E5DCF6;--qk:#C6B7EA;position:relative;display:block;width:100%;margin:0 0 14px;padding:40px 22px 14px;text-align:left;border:1px solid rgba(255,255,255,.75);border-radius:20px;background:linear-gradient(150deg,var(--g1),var(--g2));box-shadow:0 8px 18px -14px rgba(120,100,165,.42),inset 0 1px 0 rgba(255,255,255,.8);color:#554F66;transition:box-shadow .25s}
-.qv::before{content:"“";position:absolute;left:20px;top:12px;font:700 46px/1 var(--serif);color:var(--qk)}
-.qv.q1{--g1:#FBEAF0;--g2:#F6DEE7;--qk:#EDB4C8}
-.qv.q2{--g1:#E4F3EC;--g2:#D8EDE2;--qk:#A8D6BD}
-.qv.q3{--g1:#FCF3D9;--g2:#F7EAC4;--qk:#E8CE84}
-.qv.q4{--g1:#E4EFFB;--g2:#D7E6F7;--qk:#A8C5EA}
-.qv:hover{box-shadow:0 10px 20px -14px rgba(120,100,165,.55),inset 0 1px 0 #fff}
-.qv .qt{display:block;font:400 14.5px/1.9 var(--serif);white-space:pre-wrap;word-break:break-word;text-wrap:pretty}
-.qv .qm{display:block;margin-top:10px;text-align:right;font-size:11.5px;color:rgba(85,79,102,.62)}
 .j-t{color:#4F4A60}
+/* ═════════ 수정 v7: 한 계열의 차분한 파스텔, 그라데이션 없이 ═════════ */
+.note-t{display:block;width:100%;text-align:left;border:1px solid #FBE8D0;border-radius:20px;padding:18px 20px;background:#FFF8EC;color:#62544F;font:400 15px/1.95 var(--serif);white-space:pre-wrap;word-break:break-word;text-wrap:pretty;transition:filter .2s}
+.note-t:hover{filter:brightness(.985)}
+.qv{--qb:#FFCED8;position:relative;display:block;width:100%;margin:0 0 14px;padding:40px 22px 14px;text-align:left;border:0;border-radius:20px;background:var(--qb);color:#675257;transition:filter .2s}
+.qv::before{content:"“";position:absolute;left:20px;top:12px;font:700 46px/1 var(--serif);color:rgba(150,100,112,.34)}
+.qv.q1{--qb:#FFDDDD}
+.qv.q2{--qb:#FFF4DE}
+.qv.q3{--qb:#FFE8C4}
+.qv:hover{filter:brightness(.985)}
+.qv .qt{display:block;font:400 14.5px/1.9 var(--serif);white-space:pre-wrap;word-break:break-word;text-wrap:pretty}
+.qv .qm{display:block;margin-top:10px;text-align:right;font-size:11.5px;color:rgba(103,82,87,.6)}
 </style>
 </head>
 <body>
@@ -1068,7 +1065,7 @@ const leanShift = (b, H) => Math.round(H * Math.sin(leanInfo(b).deg * Math.PI / 
 function spineHTML(b, g, { lean = true, sel = true, i = 0 } = {}) {
   const isLean = lean && b.status === '읽는 중';
   const L = isLean ? leanInfo(b) : null;
-  const cls = ['spine', g.mode, isLean && 'lean', isLean && L.dir > 0 && 'lean-r', b.status === '읽을 책' && 'todo', b.status === '중단' && 'stop', sel && state.selected === b.id && 'sel'].filter(Boolean).join(' ');
+  const cls = ['spine', g.mode, isLean && 'lean', isLean && L.dir > 0 && 'lean-r', b.status === '읽을 책' && 'todo', sel && state.selected === b.id && 'sel'].filter(Boolean).join(' ');
   let style = `width:${g.W}px;height:${g.H}px;--i:${Math.min(i, 60)};`;
   if (isLean) style += `--lean:${(L.dir * L.deg).toFixed(1)}deg;margin-${L.dir < 0 ? 'left' : 'right'}:${leanShift(b, g.H)}px;`;   // 왼쪽 책에 기대도록, 기울어진 만큼 오른쪽으로 비켜 꽂아요
   let inner = '';
@@ -1253,9 +1250,9 @@ function renderShelf() {
   if (!list.length) { host.innerHTML = '<p class="empty">조건에 맞는 책이 없어요.</p>'; return; }
   const cm = state.shelfMode === 'cover';
   const avail = host.clientWidth - 2 * 10 - 2 * 26;          // 바깥 여백(10) + 칸 안쪽 여백(26)
-  // "전체" 보기에서만: 읽는 중=기울어짐(책등 모드), 읽을 책=눕혀 쌓아둠, 중단=안쪽으로 밀어 넣음
+  // "전체" 보기에서만: 읽는 중=기울어짐(책등 모드), 읽을 책·중단=눕혀 쌓아둠
   const all = state.status === 'all', leanOk = all && !cm, gap = cm ? 14 : 1;
-  const isFlat = b => all && b.status === '읽을 책';
+  const isFlat = b => all && (b.status === '읽을 책' || b.status === '중단');
   const entries = [];
   list.forEach(b => {
     if (isFlat(b)) { const last = entries[entries.length - 1]; if (last && last.pile && last.pile.length < 5) last.pile.push(b); else entries.push({ pile: [b] }); }
@@ -1511,7 +1508,7 @@ function renderDrawer() {
       ${d.review ? `<button type="button" class="note-t" data-d="editreview">${esc(d.review)}</button>` : ''}</div>
 
     <div class="sec j-sec"><div class="sec-h"><span class="j-t">인상 깊은 문장${d.quotes.length ? `<em>${d.quotes.length}</em>` : ''}</span><button type="button" class="j-add" data-d="addq">${ICON_PLUS}추가</button></div>
-      ${d.quotes.map((q, i) => `<button type="button" class="qv q${i % 5}" data-qedit="${i}"><span class="qt">${esc(q.text)}</span>${q.chapter || q.page ? `<span class="qm">${[q.chapter && esc(q.chapter), q.page && esc(q.page) + '쪽'].filter(Boolean).join(' · ')}</span>` : ''}</button>`).join('')}</div>
+      ${d.quotes.map((q, i) => `<button type="button" class="qv q${i % 4}" data-qedit="${i}"><span class="qt">${esc(q.text)}</span>${q.chapter || q.page ? `<span class="qm">${[q.chapter && esc(q.chapter), q.page && esc(q.page) + '쪽'].filter(Boolean).join(' · ')}</span>` : ''}</button>`).join('')}</div>
 
     <details class="sec look-sec" ${state.lookOpen ? 'open' : ''}><summary><span class="lab">책장에서 보이는 모습</span><span class="ln">${lookNote}</span></summary>
       <div class="look"><div class="pv">${preview}</div>

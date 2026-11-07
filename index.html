@@ -444,6 +444,109 @@ dialog::backdrop{background:rgba(70,60,50,.32);backdrop-filter:blur(4px)}
 .spine.sel{outline:none}
 @media (max-width:760px){.sync .lbl{display:none}}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+/* ═════════ 수정 v2 ═════════ */
+/* 저장 표시: 글자·점을 알약 한가운데로 */
+.sync{justify-content:center;gap:7px;height:32px;min-width:106px;padding:0 14px 0 12px;line-height:1}
+.sync .lbl{min-width:0;text-align:center;line-height:1;display:block;padding-top:1px}
+
+/* 드롭다운 */
+.dd{position:relative;display:inline-block;z-index:6}
+.dd.open{z-index:60}
+.dd-btn{display:inline-flex;align-items:center;gap:9px;height:34px;padding:0 11px 0 15px;border:1px solid var(--line-d);border-radius:999px;background:rgba(255,255,255,.8);font-size:13.5px;font-weight:500;color:var(--ink2);box-shadow:var(--sh1);transition:background .2s,border-color .2s,box-shadow .2s}
+.dd-btn:hover{background:#fff;border-color:#D3C8B6}
+.dd.open .dd-btn,.dd-btn:focus-visible{background:#fff;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);outline:none}
+.dd-btn svg{color:var(--muted);flex:none;transition:transform .28s var(--ease)}
+.dd.open .dd-btn svg{transform:rotate(180deg)}
+.dd-list{position:absolute;top:calc(100% + 8px);left:0;min-width:100%;width:max-content;max-height:320px;overflow:auto;margin:0;padding:6px;list-style:none;background:rgba(255,254,252,.97);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);border:1px solid rgba(230,220,205,.9);border-radius:16px;box-shadow:0 18px 44px rgba(110,90,70,.2),0 2px 6px rgba(110,90,70,.08);transform-origin:top left;animation:pop .2s var(--ease)}
+.dd-list li{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:8px 12px;border-radius:10px;font-size:13.5px;color:var(--ink2);cursor:pointer;white-space:nowrap;transition:background .12s}
+.dd-list li:hover{background:var(--accent-soft);color:var(--ink)}
+.dd-list li svg{opacity:0;color:var(--accent-d);flex:none}
+.dd-list li[aria-selected=true]{color:var(--accent-d);font-weight:700}
+.dd-list li[aria-selected=true] svg{opacity:1}
+.s-head .dd-btn{height:36px;font-size:14px}
+select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none' stroke='%239B9388' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'><path d='M2.5 4.5 6 8l3.5-3.5'/></svg>");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
+
+/* 책장 보기 방식 토글 */
+.mode-t{display:inline-flex;gap:2px;padding:3px;border-radius:999px;background:rgba(232,223,210,.55)}
+.mode-t button{display:inline-flex;align-items:center;gap:6px;border:0;background:none;padding:4px 13px;border-radius:999px;font-size:13px;font-weight:600;color:var(--muted);transition:background .2s,color .2s,box-shadow .2s}
+.mode-t button:hover{color:var(--ink)}
+.mode-t button[aria-pressed=true]{background:#fff;color:var(--ink);box-shadow:0 1px 4px rgba(120,100,80,.2)}
+
+/* 새 책장: 참나무 틀 + 안쪽 뒤판 + 두께 있는 선반 */
+.shelf.wall{padding:18px 18px 22px;border-radius:22px;background:linear-gradient(135deg,#E9D5B1 0,#DAC094 48%,#CDAE80 100%);box-shadow:inset 0 2px 0 rgba(255,255,255,.55),inset 0 -3px 0 rgba(120,85,45,.25),0 26px 50px -20px rgba(110,80,45,.5),0 2px 6px rgba(110,80,45,.18)}
+.wall .case-in{position:relative;overflow:hidden;border-radius:8px;background-color:#F2EADB;background-image:repeating-linear-gradient(90deg,rgba(150,115,70,.05) 0 1px,transparent 1px 44px);box-shadow:inset 0 12px 20px -8px rgba(80,55,25,.38),inset 9px 0 14px -8px rgba(80,55,25,.32),inset -9px 0 14px -8px rgba(80,55,25,.32)}
+.wall .row,.wall .row:last-child{margin:0}
+.wall .books{padding:18px 22px 0;background:linear-gradient(180deg,rgba(80,55,25,.17),rgba(80,55,25,0) 52px)}
+.wall .plank{position:relative;height:20px;margin:0;border-radius:0;background:linear-gradient(180deg,#F6E9CF 0,#EBD6B1 26%,#D9BE92 26%,#CDAE80 100%);box-shadow:inset 0 1.5px 0 rgba(255,255,255,.8),0 9px 14px -6px rgba(80,55,25,.4)}
+.wall .plank::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(130,95,55,.06) 0 2px,transparent 2px 13px,rgba(255,255,255,.1) 13px 15px,transparent 15px 31px)}
+.wall .plank::after{display:none}
+.wall .spine{box-shadow:3px 2px 8px rgba(70,45,20,.26)}
+.wall .spine.sel{box-shadow:6px 14px 22px rgba(70,45,20,.34)}
+.spine.text{background-image:linear-gradient(rgba(255,255,255,.22),rgba(255,255,255,.22)),linear-gradient(rgba(255,255,255,.22),rgba(255,255,255,.22));background-size:100% 2px,100% 2px;background-position:0 9px,0 15px;background-repeat:no-repeat}
+.wall.cm .books{gap:14px;padding-top:22px}
+.spine.cover{border-radius:2px 5px 5px 2px}
+.spine.cover img{object-fit:cover}
+.spine.cover::after,.spine.ctext::after{background:linear-gradient(90deg,rgba(0,0,0,.3),rgba(255,255,255,.14) 3%,rgba(0,0,0,.07) 6.5%,transparent 15%,transparent 92%,rgba(0,0,0,.12))}
+.spine.ctext{display:flex;align-items:center;justify-content:center;text-align:center;padding:16px 14px 16px 18px;border-radius:2px 5px 5px 2px;color:var(--sp-ink,#fff)}
+.spine.ctext .ct{display:block;min-width:0}
+.spine.ctext .ct b{display:block;font:700 15px/1.35 var(--serif);word-break:keep-all;overflow-wrap:anywhere}
+.spine.ctext .ct i{display:block;margin-top:10px;font:400 12px/1.3 var(--serif);font-style:normal;opacity:.8}
+
+/* 목록: 줄 높이를 고정해서 서랍이 열려도 행이 밀려 내려가지 않게 */
+table{min-width:880px}
+td.title .tt{max-width:290px}
+td.title .tt span{min-width:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.35}
+td.au>div{max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+td.kwtd .tag{margin-right:4px;padding:0 7px;font-size:11px;line-height:1.75;border-radius:6px;gap:2px}
+td.kwtd .tag::before{font-size:10px}
+.kw .c{font-size:12px;padding:1px 4px 1px 9px;border-radius:7px}
+
+/* 감상 입력 줄이기 */
+textarea.big{min-height:96px}
+#f-review{min-height:96px}
+
+/* 통계: 월별(액체 막대 + 오른쪽 목록) · 평점 분포(가로 막대) */
+.mcard{display:grid;grid-template-columns:minmax(0,1fr) 262px;gap:0 26px}
+.m-main{min-width:0}
+.m-side{display:flex;flex-direction:column;min-width:0;padding-left:24px;border-left:1px solid rgba(160,148,185,.2)}
+.ms-h{display:flex;align-items:baseline;gap:8px;margin-bottom:10px}
+.ms-h b{font:700 17px var(--serif);color:#4A4658}
+.ms-h span{font-size:13px;color:var(--muted)}
+.ms-list{display:grid;gap:2px;align-content:start;overflow:auto;max-height:238px;animation:fadeup .3s var(--ease)}
+.ms-empty{margin:6px 0 0;font-size:13.5px}
+.mb{display:flex;align-items:center;gap:11px;width:100%;text-align:left;border:0;background:none;padding:6px 8px;border-radius:12px;transition:background .15s,transform .2s var(--ease)}
+.mb:hover{background:rgba(255,255,255,.75);transform:translateX(2px)}
+.mb img{width:28px;height:40px;object-fit:cover;border-radius:3px;background:var(--line);flex:none;box-shadow:0 1px 5px rgba(0,0,0,.18)}
+.mb .i{min-width:0;flex:1}
+.mb .i b{display:block;font-weight:600;font-size:13.5px;line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mb .i small{display:block;font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mb em{font-style:normal;font-weight:700;font-size:12.5px;flex:none}
+.pcol{border:0;background:none;padding:0;font:inherit;color:inherit;cursor:pointer}
+.pcol:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:12px}
+.pcol .ptrack{transform-origin:50% 100%}
+.pcol.on .ptrack{box-shadow:0 0 0 2px rgba(255,255,255,.95),0 8px 18px rgba(130,115,160,.3)}
+.pcol.on .pl,.pcol.on .pv{color:var(--ink);font-weight:700}
+.pbar{position:relative}
+.pbar::before{content:"";position:absolute;left:-45%;width:190%;top:-6px;height:12px;border-radius:50%;background:var(--a);opacity:0;pointer-events:none}
+.pcol.slosh .pbar::before{animation:surf 1.5s cubic-bezier(.3,.1,.3,1) both}
+.pcol.slosh .ptrack{animation:jelly 1.1s var(--ease) both}
+@keyframes surf{0%{opacity:1;transform:rotate(-17deg) scaleY(1.7)}16%{opacity:1;transform:rotate(15deg) scaleY(1.5)}32%{opacity:1;transform:rotate(-11deg) scaleY(1.3)}50%{opacity:1;transform:rotate(7deg) scaleY(1.15)}68%{opacity:1;transform:rotate(-3.5deg) scaleY(1.05)}84%{opacity:.7;transform:rotate(1.2deg)}100%{opacity:0;transform:rotate(0)}}
+@keyframes jelly{0%{transform:scale(1,1)}18%{transform:scale(1.22,.93)}38%{transform:scale(.9,1.05)}58%{transform:scale(1.07,.98)}78%{transform:scale(.97,1.01)}100%{transform:scale(1,1)}}
+.hbars.rt{gap:9px}
+.hbars.rt .r{grid-template-columns:42px 1fr 30px}
+.hbars.rt .r em{font-style:normal}
+@media (max-width:760px){.mcard{grid-template-columns:1fr}.m-side{padding:16px 0 0;margin-top:16px;border-left:0;border-top:1px solid rgba(160,148,185,.2)}}
+@media (min-width:1100px) and (max-width:1500px){body.drawer-open .mcard{grid-template-columns:1fr}body.drawer-open .m-side{padding:16px 0 0;margin-top:16px;border-left:0;border-top:1px solid rgba(160,148,185,.2)}}
+/* 보정: 제목 칸 최소 폭 / 상단 글자 줄바꿈 방지 / 표를 조금 더 촘촘하게 */
+td.title{width:260px;min-width:260px}
+td.title .tt{width:236px;max-width:none}
+td.au>div{max-width:128px}
+th,td{padding-left:12px;padding-right:12px}
+.brand,.tabs button,.chip-b,.dd-btn,.mode-t button{white-space:nowrap}
+.top{gap:20px}
+body.drawer-open #q{width:170px}
+body.drawer-open #q:focus{width:200px}
 </style>
 </head>
 <body>
@@ -589,7 +692,7 @@ const state = {
   books: [], settings: {},
   view: 'shelf', status: 'all', year: 'all', q: '',
   sort: store.get(LS.sort, 'end:asc'),
-  scale: store.get(LS.scale, 1.5),
+  scale: store.get(LS.scale, 1.5), shelfMode: store.get('readlog.shelfMode', 'spine'), mSel: null,
   statsYear: String(new Date().getFullYear()),
   selected: null, draft: null, dirty: false, lastEdit: 0, conflict: false, anim: true,
   autosave: store.get('readlog.autosave', true), net: { w: 0, r: 0 }, sync: { last: Date.now(), err: '' },
@@ -764,9 +867,13 @@ function thickMm(b) {
   if (b.thicknessMm >= 6 && b.thicknessMm <= 70) return b.thicknessMm;
   return b.pages ? clamp(b.pages * 0.055 + 3, 8, 55) : 18;
 }
-function geom(b) {
+function geom(b, forceSpine = false) {
   const s = state.scale;
   const hMm = b.heightMm >= 100 && b.heightMm <= 400 ? b.heightMm : DEFAULT_H_MM * (0.96 + (hash(b.id) % 9) / 100);
+  if (state.shelfMode === 'cover' && !forceSpine) {            // 앞표지 보기: 표지가 정면으로 보이게
+    const Hc = Math.round(hMm * s * 0.62);
+    return { H: Hc, W: Math.round(Hc * 0.7), mode: b.cover ? 'cover' : 'ctext' };
+  }
   const H = Math.round(hMm * s);
   if (b.faceOut && b.cover) return { H, W: Math.round(H * 0.68), mode: 'cover' };
   const img = spineUrl(b);
@@ -778,7 +885,7 @@ function geom(b) {
   }
   return { H, W: Math.max(15, Math.round(thickMm(b) * s)), mode: 'text' };
 }
-/** 책마다 고정된 무작위 기울기: 방향(왼/오른쪽)과 각도(4~22도)가 책마다 달라요. */
+/** 책마다 고정된 무작위 기울기: 방향(왼/오른쪽)과 각도(2.5~11도)가 책마다 달라요. */
 function leanInfo(b) {
   const mix = k => {
     let h = 2166136261;
@@ -787,7 +894,7 @@ function leanInfo(b) {
     return (h >>> 0) / 4294967296;
   };
   const k = String(b.id) + '|' + String(b.title);
-  return { deg: 4 + mix(k + '#a') * 18, dir: mix(k + '#d') < 0.5 ? -1 : 1 };
+  return { deg: 2.5 + Math.pow(mix(k + '#a'), 1.5) * 8.5, dir: mix(k + '#d') < 0.5 ? -1 : 1 };
 }
 const leanShift = (b, H) => Math.round(H * Math.sin(leanInfo(b).deg * Math.PI / 180));
 function spineHTML(b, g, { lean = true, sel = true, i = 0 } = {}) {
@@ -799,12 +906,43 @@ function spineHTML(b, g, { lean = true, sel = true, i = 0 } = {}) {
   let inner = '';
   if (g.mode === 'img') inner = `<img src="${esc(g.img)}" alt="" referrerpolicy="no-referrer" draggable="false" data-mode="spine">`;
   else if (g.mode === 'cover') inner = `<img src="${esc(b.cover)}" alt="" referrerpolicy="no-referrer" draggable="false" data-mode="cover">`;
+  else if (g.mode === 'ctext') { const bg = bgFor(b); style += `--sp-bg:${bg};--sp-ink:${inkFor(bg)};`; inner = `<span class="ct"><b>${esc(b.title)}</b><i>${esc(b.author)}</i></span>`; }
   else {
     const bg = bgFor(b), fs = clamp(g.W * 0.44, 10, 17);
     style += `--sp-bg:${bg};--sp-ink:${inkFor(bg)};`;
     inner = `<span class="t" style="font-size:${fs.toFixed(1)}px;max-width:${g.H - 34}px"><b>${esc(b.title)}</b><i>${esc(b.author)}</i></span>`;
   }
   return `<button type="button" class="${cls}" style="${style}" data-id="${esc(b.id)}" title="${esc(b.title)}${b.author ? ' · ' + esc(b.author) : ''}" aria-label="${esc(b.title)}">${inner}</button>`;
+}
+
+
+/* ════════════════ 드롭다운(직접 만든 선택 상자) ════════════════ */
+const DD_CHEV = '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg>';
+const DD_CHECK = '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 6.4 5 8.8l4.5-5.2"/></svg>';
+function ddHTML(id, opts, val, fallback = '선택') {
+  const cur = opts.find(o => String(o[0]) === String(val));
+  return `<div class="dd" data-dd="${id}"><button type="button" class="dd-btn" aria-haspopup="listbox" aria-expanded="false"><span>${esc(cur ? cur[1] : fallback)}</span>${DD_CHEV}</button>` +
+    `<ul class="dd-list" role="listbox" hidden>${opts.map(([v, l]) => `<li role="option" data-v="${esc(v)}" aria-selected="${String(v) === String(val)}"><span>${esc(l)}</span>${DD_CHECK}</li>`).join('')}</ul></div>`;
+}
+function closeDD(dd) { dd.classList.remove('open'); dd.querySelector('.dd-list').hidden = true; dd.querySelector('.dd-btn').setAttribute('aria-expanded', 'false'); }
+function toggleDD(dd) {
+  const open = !dd.classList.contains('open');
+  dd.classList.toggle('open', open); dd.querySelector('.dd-list').hidden = !open; dd.querySelector('.dd-btn').setAttribute('aria-expanded', String(open));
+  if (open) dd.querySelector('[aria-selected=true]')?.scrollIntoView({ block: 'nearest' });
+}
+function onDD(id, v) {
+  if (id === 'year') { state.year = v; renderAll(); }
+  else if (id === 'sort') { state.sort = v; store.set(LS.sort, v); renderAll(); }
+  else if (id === 'stats-year') { state.statsYear = v; state.mSel = null; renderStats(); }
+}
+
+/** 클릭한 책이 화면에서 사라지지 않게: 목록은 같은 높이에 붙잡아 두고, 화면 밖이면 가운데로 스크롤해요. */
+function selEl() { if (!state.selected) return null; const id = CSS.escape(state.selected); return $(`tr[data-id="${id}"]`) || $(`.spine[data-id="${id}"]`); }
+function revealSelected(prevTop) {
+  const el = selEl(); if (!el) return;
+  if (prevTop != null && el.tagName === 'TR') { const dy = el.getBoundingClientRect().top - prevTop; if (Math.abs(dy) > 2) window.scrollBy(0, dy); }
+  const r = (el.closest('.row') || el).getBoundingClientRect();
+  if (r.top < 74 || r.bottom > innerHeight - 16) el.scrollIntoView({ block: 'center', behavior: 'smooth' });
 }
 
 /* ════════════════ 화면: 상단·도구줄 ════════════════ */
@@ -821,10 +959,11 @@ function renderToolbar() {
   const chips = [['all', '전체'], ...STATUSES.map(s => [s, s])].map(([v, l]) =>
     `<button class="chip-b" data-status="${v}" aria-pressed="${state.status === v}">${l}<small>${cnt(v)}</small></button>`).join('');
   const years = yearList();
-  const yearSel = `<select id="sel-year" aria-label="연도"><option value="all">전체 연도</option>${years.map(y => `<option value="${y}" ${state.year === y ? 'selected' : ''}>${y}년</option>`).join('')}</select>`;
-  const sortSel = `<select id="sel-sort" aria-label="정렬">${SORT_OPTIONS.map(([v, l]) => `<option value="${v}" ${state.sort === v ? 'selected' : ''}>${l}</option>`).join('')}</select>`;
+  const yearSel = ddHTML('year', [['all', '전체 연도'], ...years.map(y => [y, y + '년'])], state.year);
+  const sortSel = ddHTML('sort', SORT_OPTIONS, state.sort, '열 기준 정렬');
+  const mode = state.view === 'shelf' ? `<div class="mode-t" role="group" aria-label="책장 보기 방식"><button type="button" data-shelfmode="spine" aria-pressed="${state.shelfMode !== 'cover'}"><svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><rect x="1.5" y="3" width="3" height="9" rx=".8"/><rect x="5.5" y="1.5" width="3" height="10.5" rx=".8"/><rect x="9.5" y="3.5" width="3" height="8.5" rx=".8" transform="rotate(8 11 12)"/></svg>책등</button><button type="button" data-shelfmode="cover" aria-pressed="${state.shelfMode === 'cover'}"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="2.5" y="1.5" width="9" height="11" rx="1.3"/><path d="M5 1.5v11" opacity=".6"/></svg>표지</button></div>` : '';
   const size = state.view === 'shelf' ? `<label class="size">책 크기<input id="rng-size" type="range" min="0.9" max="2" step="0.05" value="${state.scale}"></label>` : '';
-  tb.innerHTML = `<div class="chips">${chips}</div><span class="sp"></span>${yearSel}${sortSel}${size}`;
+  tb.innerHTML = `<div class="chips">${chips}</div><span class="sp"></span>${yearSel}${sortSel}${mode}${size}`;
 }
 function banner(msg, err = false, action = '') {
   const b = $('#banner');
@@ -839,12 +978,11 @@ function emptyHTML() {
   <div class="acts"><button class="btn primary" data-act="add">책 추가</button><button class="btn" data-act="import">엑셀·CSV 가져오기</button></div></div>`;
 }
 const hashStr = k => { let h = 2166136261; for (let i = 0; i < k.length; i++) { h ^= k.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; };
-const DECOR = ['plant', 'stack', 'mug', 'plant', 'mug', 'stack'];
+const DECOR = ['plant', 'stack', 'plant', 'stack'];
 function decorHTML(kind) {
   const svg = {
     plant: '<svg viewBox="0 0 70 96" width="64" height="88"><g class="sway"><path d="M35 62C33 44 22 34 10 32c2 14 10 26 25 30z" fill="#A9D6B8"/><path d="M35 62C38 40 50 28 63 25c-1 16-10 31-28 37z" fill="#8CC7A0"/><path d="M35 64C35 48 33 34 35 18c5 12 5 30 0 46z" fill="#BCE2C8"/></g><path d="M18 62h34l-4 30a4 4 0 0 1-4 3H26a4 4 0 0 1-4-3z" fill="#EBBFAE"/><rect x="16" y="58" width="38" height="8" rx="4" fill="#F4D0C1"/></svg>',
     stack: '<svg viewBox="0 0 84 58" width="80" height="55"><rect x="5" y="42" width="74" height="14" rx="3.5" fill="#CBBFEC"/><rect x="5" y="43" width="74" height="3" rx="1.5" fill="#fff" opacity=".4"/><rect x="11" y="28" width="62" height="14" rx="3.5" fill="#F4BFC6"/><rect x="11" y="29" width="62" height="3" rx="1.5" fill="#fff" opacity=".4"/><rect x="8" y="14" width="66" height="14" rx="3.5" fill="#C1E2D1"/><rect x="8" y="15" width="66" height="3" rx="1.5" fill="#fff" opacity=".4"/><circle cx="41" cy="9" r="5" fill="#F7E3A6"/></svg>',
-    mug: '<svg viewBox="0 0 60 66" width="56" height="62"><g class="steam" fill="none" stroke="#D5CCE6" stroke-width="2.6" stroke-linecap="round"><path d="M21 20c-4-5 4-8 0-14"/><path d="M31 20c-4-5 4-8 0-14" style="animation-delay:.9s"/></g><path d="M10 26h34v18a14 14 0 0 1-14 14h-6a14 14 0 0 1-14-14z" fill="#F7E3B3"/><path d="M44 30h3.5a6.5 6.5 0 0 1 0 13H43" fill="none" stroke="#F7E3B3" stroke-width="4.4"/><ellipse cx="27" cy="27" rx="17" ry="3.4" fill="#E6CD92"/></svg>'
   }[kind];
   return `<div class="decor decor-${kind}" aria-hidden="true">${svg}</div>`;
 }
@@ -853,27 +991,26 @@ function renderShelf() {
   if (!state.books.length) { host.innerHTML = emptyHTML(); return; }
   const list = visibleBooks();
   if (!list.length) { host.innerHTML = '<p class="empty">조건에 맞는 책이 없어요.</p>'; return; }
-  const avail = host.clientWidth - 2 * 12 - 2 * 28;
-  // 읽는 중인 책은 "전체" 보기에서만 기울여요. "읽는 중" 탭이나 다른 탭에서는 똑바로 서요.
-  const leanOk = state.status === 'all';
+  const cm = state.shelfMode === 'cover';
+  const avail = host.clientWidth - 2 * 18 - 2 * 22;          // 책장 테두리(18) + 칸 안쪽 여백(22)
+  // 읽는 중인 책은 "전체" 보기(책등 모드)에서만 기울여요.
+  const leanOk = state.status === 'all' && !cm, gap = cm ? 14 : 1;
   const rows = []; let cur = [], w = 0;
   list.forEach(b => {
-    const g = geom(b), extra = leanOk && b.status === '읽는 중' ? leanShift(b, g.H) : 0, need = g.W + extra + 1;
+    const g = geom(b), extra = leanOk && b.status === '읽는 중' ? leanShift(b, g.H) : 0, need = g.W + extra + gap;
     if (cur.length && w + need > avail) { rows.push({ items: cur, w }); cur = []; w = 0; }
     cur.push([b, g]); w += need;
   });
   if (cur.length) rows.push({ items: cur, w });
-  const yr = String(new Date().getFullYear()), doneY = state.books.filter(b => b.status === '완독' && (b.endDate || '').startsWith(yr)).length, reading = state.books.filter(b => b.status === '읽는 중').length;
-  const hello = state.status === 'all' && !state.q ? `<p class="hello">올해 <b>${doneY}권</b>을 덮었고, ${reading ? `지금은 <b>${reading}권</b>을 읽고 있어요.` : '지금 읽고 있는 책은 없어요.'}</p>` : '';
   const anim = state.anim; state.anim = false;
   let idx = 0;
-  host.innerHTML = hello + `<div class="shelf wall${anim ? ' anim' : ''}">` + rows.map((r, ri) => {
+  host.innerHTML = `<div class="shelf wall${cm ? ' cm' : ''}${anim ? ' anim' : ''}"><div class="case-in">` + rows.map((r, ri) => {
     const mh = Math.max(...r.items.map(x => x[1].H));
     const kind = avail - r.w >= 130 ? DECOR[(ri + hashStr(String(r.items[0][0].id))) % DECOR.length] : '';
-    return `<section class="row"><div class="books" style="height:${mh + 30}px">${r.items.map(([b, g]) => spineHTML(b, g, { lean: leanOk, i: idx++ })).join('')}${kind ? decorHTML(kind) : ''}</div><div class="plank"></div></section>`;
-  }).join('') + '</div>';
+    return `<section class="row"><div class="books" style="height:${mh + 38}px">${r.items.map(([b, g]) => spineHTML(b, g, { lean: leanOk, i: idx++ })).join('')}${kind ? decorHTML(kind) : ''}</div><div class="plank"></div></section>`;
+  }).join('') + '</div></div>';
 }
-const relayoutShelf = debounce(() => { if (state.view === 'shelf') renderShelf(); }, 140);
+const relayoutShelf = debounce(reveal => { if (state.view === 'shelf') { renderShelf(); if (reveal === true) revealSelected(null); } }, 140);
 
 /** 책등 사진이 실제로 불러와졌을 때: 진짜 책등인지 확인하고 두께를 맞춥니다. */
 function onSpineEvent(e) {
@@ -911,9 +1048,9 @@ function renderList() {
   const rows = list.map(b => {
     const d = daysOf(b), s = { '읽을 책': '', '읽는 중': 's1', '완독': 's2', '중단': 's3' }[b.status];
     return `<tr data-id="${esc(b.id)}" class="${state.selected === b.id ? 'sel' : ''}">
-      <td class="title"><div class="tt">${b.cover ? `<img src="${esc(b.cover)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : '<img alt="">'}<span>${esc(b.title)}</span></div></td>
-      <td>${esc(b.author)}</td><td class="nw">${esc(b.category)}</td><td class="kwtd">${kwList(b).slice(0, 3).map(k => `<span class="tag" style="${kwStyle(k)}">${esc(k)}</span>`).join('')}${kwList(b).length > 3 ? `<span class="tag more">+${kwList(b).length - 3}</span>` : ''}</td>
-      <td class="nw">${esc(b.startDate)}</td><td class="nw">${esc(b.endDate)}</td><td>${d ?? ''}</td>
+      <td class="title"><div class="tt">${b.cover ? `<img src="${esc(b.cover)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : '<img alt="">'}<span title="${esc(b.title)}">${esc(b.title)}</span></div></td>
+      <td class="au"><div title="${esc(b.author)}">${esc(b.author)}</div></td><td class="nw">${esc(b.category)}</td><td class="kwtd">${kwList(b).slice(0, 3).map(k => `<span class="tag" style="${kwStyle(k)}">${esc(k)}</span>`).join('')}${kwList(b).length > 3 ? `<span class="tag more">+${kwList(b).length - 3}</span>` : ''}</td>
+      <td class="nw">${esc(b.startDate)}</td><td class="nw">${esc(b.endDate)}</td><td class="nw">${d != null ? d + '일' : ''}</td>
       <td class="rt">${b.rating ? `<span class="rate r${rTier(b.rating)}" title="${b.rating.toFixed(1)}점">★ ${b.rating.toFixed(1)}</span>` : ''}</td><td class="st"><span class="pill ${s}">${esc(b.status)}</span></td></tr>`;
   }).join('');
   host.innerHTML = `<div class="tbl-wrap"><table><thead><tr>${head}</tr></thead><tbody>${rows}</tbody></table></div>${list.length ? '' : '<p class="empty">조건에 맞는 책이 없어요.</p>'}`;
@@ -940,9 +1077,26 @@ function renderQuotes() {
 }
 
 /* ════════════════ 화면: 통계 ════════════════ */
+let MDATA = { labels: [], groups: [], yr: '' };
 function pillChart(items, { h = 150, min = 4 } = {}) {
   const mx = Math.max(min, ...items.map(i => i.v));
-  return `<div class="pc" style="--h:${h}px">${items.map((it, k) => `<div class="pcol${it.now ? ' now' : ''}${it.v ? '' : ' zero'}" title="${esc(it.title)}" style="--p:${it.v ? Math.max(0.1, it.v / mx).toFixed(3) : 0};--d:${k * 40}ms;--a:${it.c1};--b:${it.c2}"><span class="pv">${it.v || ''}</span><div class="ptrack"><i class="pbar"></i></div><span class="pl">${esc(it.label)}</span></div>`).join('')}</div>`;
+  return `<div class="pc" style="--h:${h}px">${items.map((it, k) => `<button type="button" class="pcol${it.now ? ' now' : ''}${it.v ? '' : ' zero'}${it.sel ? ' on' : ''}" data-i="${k}" title="${esc(it.title)}" aria-label="${esc(it.title)}" style="--p:${it.v ? Math.max(0.1, it.v / mx).toFixed(3) : 0};--d:${k * 40}ms;--a:${it.c1};--b:${it.c2}"><span class="pv">${it.v || ''}</span><span class="ptrack"><i class="pbar"></i></span><span class="pl">${esc(it.label)}</span></button>`).join('')}</div>`;
+}
+/** 선택한 달(또는 해)에 읽은 책 목록 */
+function mSideHTML(i) {
+  const { labels, groups, yr } = MDATA, list = groups[i] || [];
+  const name = yr === 'all' ? labels[i] + '년' : labels[i];
+  return `<div class="ms-h"><b>${esc(name)}</b><span>${list.length}권</span></div>` + (list.length
+    ? `<div class="ms-list">${list.map(b => `<button type="button" class="mb" data-id="${esc(b.id)}">${b.cover ? `<img src="${esc(b.cover)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : '<img alt="">'}<div class="i"><b>${esc(b.title)}</b><small>${esc(b.author)}</small></div>${b.rating ? `<em style="color:var(--c${rTier(b.rating)})">★ ${b.rating.toFixed(1)}</em>` : ''}</button>`).join('')}</div>`
+    : '<p class="muted ms-empty">이 기간에 완독한 책이 없어요.</p>');
+}
+/** 막대를 누르면: 액체가 출렁이고, 오른쪽에 그 달의 책이 나와요. */
+function selectMonth(i) {
+  state.mSel = i;
+  $$('.pcol[data-i]').forEach(c => c.classList.toggle('on', +c.dataset.i === i));
+  const side = $('#mside'); if (side) side.innerHTML = mSideHTML(i);
+  const col = $(`.pcol[data-i="${i}"]`);
+  if (col) { clearTimeout(col._t); col.classList.remove('slosh'); void col.offsetWidth; col.classList.add('slosh'); col._t = setTimeout(() => col.classList.remove('slosh'), 1700); }
 }
 function countUp(el) {
   const to = +el.dataset.count; if (!to || matchMedia('(prefers-reduced-motion:reduce)').matches) return;
@@ -962,14 +1116,17 @@ function renderStats() {
   const dd = done.map(daysOf).filter(x => x !== null), avgD = dd.length ? dd.reduce((s, x) => s + x, 0) / dd.length : 0;
   const goal = yr === 'all' ? 0 : toNum(state.settings['goal-' + yr]);
   const label = yr === 'all' ? '지금까지' : (yr === curY ? '올해' : yr + '년에');
-  const yearSel = `<select id="sel-stats-year" aria-label="통계 연도"><option value="all" ${yr === 'all' ? 'selected' : ''}>전체</option>${years.map(y => `<option value="${y}" ${yr === y ? 'selected' : ''}>${y}년</option>`).join('')}</select>`;
+  const yearSel = ddHTML('stats-year', [['all', '전체'], ...years.map(y => [y, y + '년'])], yr);
   // 월별 / 연도별 막대
   let labels, counts;
   if (yr === 'all') { labels = years.slice().reverse(); counts = labels.map(y => done.filter(b => b.endDate.startsWith(y)).length); }
   else { labels = Array.from({ length: 12 }, (_, i) => (i + 1) + '월'); counts = Array(12).fill(0); done.forEach(b => counts[+b.endDate.slice(5, 7) - 1]++); }
   const MCOL = [['#F9D5DC', '#F2A9B8'], ['#FBE0D0', '#F5BA9C'], ['#FCEBC4', '#F4D187'], ['#E9F0BF', '#CFE08A'], ['#CDEBCF', '#9FD5A7'], ['#C6EBE0', '#8DD3BD'], ['#C5E6F2', '#90C9E3'], ['#CCD9F5', '#9DB4EA'], ['#DAD1F4', '#B8A8E6'], ['#EBD0F0', '#D9A9E3'], ['#F5CFE6', '#EBA3CF'], ['#F7D0D0', '#EEA3A3']];
   const nowM = yr === curY ? new Date().getMonth() : -1, mxC = Math.max(...counts), peakI = counts.indexOf(mxC);
-  const mItems = counts.map((c, i) => ({ v: c, label: yr === 'all' ? labels[i] : String(i + 1), title: `${labels[i]} · ${c}권`, now: i === nowM, c1: yr === 'all' ? '#E4DCF6' : MCOL[i][0], c2: yr === 'all' ? '#B8A8E6' : MCOL[i][1] }));
+  const groups = labels.map((_, i) => done.filter(b => yr === 'all' ? b.endDate.startsWith(labels[i]) : +b.endDate.slice(5, 7) - 1 === i).sort((a, b) => a.endDate.localeCompare(b.endDate)));
+  if (state.mSel == null || state.mSel >= labels.length) state.mSel = nowM >= 0 ? nowM : Math.max(0, peakI);
+  MDATA = { labels, groups, yr };
+  const mItems = counts.map((c, i) => ({ v: c, label: yr === 'all' ? labels[i] : String(i + 1), title: `${labels[i]} · ${c}권`, now: i === nowM, sel: i === state.mSel, c1: yr === 'all' ? '#E4DCF6' : MCOL[i][0], c2: yr === 'all' ? '#B8A8E6' : MCOL[i][1] }));
   const monthly = pillChart(mItems, { h: 150 }) + (mxC > 0 ? `<p class="pnote">가장 많이 읽은 ${yr === 'all' ? '해' : '달'}는 <b>${labels[peakI]}</b>, ${mxC}권이에요.</p>` : '<p class="pnote">아직 완독한 책이 없어요.</p>');
 
   // 분류별
@@ -980,10 +1137,10 @@ function renderStats() {
   const catHTML = catRows.map(([c, k], ci) => `<div class="r"><span title="${esc(c)}">${esc(c)}</span><span class="tr"><i style="width:${k / cmax * 100}%;background:${PASTELS[ci % PASTELS.length]}"></i></span><b>${k}</b></div>`).join('');
 
   // 평점 분포 (목록의 평점 색과 같은 색)
-  const dist = Array(10).fill(0); rated.forEach(b => dist[Math.round(b.rating * 2) - 1]++);
+  const dist = Array(10).fill(0); rated.forEach(b => dist[clamp(Math.round(b.rating * 2) - 1, 0, 9)]++);
   const dmax = Math.max(1, ...dist);
-  const distSvg = pillChart(dist.map((c, i) => { const r = (i + 1) / 2, t = rTier(r); return { v: c, label: r.toFixed(1), title: `${r.toFixed(1)}점 · ${c}권`, c1: `var(--c${t}b)`, c2: `var(--c${t})` }; }), { h: 112, min: 3 });
-  const legend = [[1, '1.5 이하'], [2, '2점대'], [3, '3점대'], [4, '4점대'], [5, '5점']].map(([t, l]) => `<span><i style="background:var(--c${t}b)"></i>${l}</span>`).join('');
+  const distRows = Array.from({ length: 10 }, (_, k) => { const i = 9 - k, r = (i + 1) / 2, t = rTier(r), c = dist[i]; return `<div class="r"><span><em style="color:var(--c${t})">★</em> ${r.toFixed(1)}</span><span class="tr"><i style="width:${c ? c / dmax * 100 : 0}%;min-width:${c ? 6 : 0}px;background:var(--c${t}b)"></i></span><b>${c}</b></div>`; }).join('');
+
 
   // 목표 링
   let ring = '';
@@ -1008,10 +1165,10 @@ function renderStats() {
       <div class="card kpi"><dt>읽는 중</dt><dd>${state.books.filter(b => b.status === '읽는 중').length}<small>권</small></dd></div>
       <div class="card kpi"><dt>읽을 책</dt><dd>${state.books.filter(b => b.status === '읽을 책').length}<small>권</small></dd></div>
     </dl>
-    <div class="card"><h3>${yr === 'all' ? '연도별' : '월별'} 읽은 권수</h3>${monthly}</div>
+    <div class="card mcard"><div class="m-main"><h3>${yr === 'all' ? '연도별' : '월별'} 읽은 권수 <small>막대를 누르면 그때 읽은 책이 보여요</small></h3>${monthly}</div><aside class="m-side" id="mside" aria-live="polite">${mSideHTML(state.mSel)}</aside></div>
     <div class="grid2">
       <div class="card"><h3>분류별 <small>상위 8개</small></h3>${catHTML ? `<div class="hbars">${catHTML}</div>` : '<p class="muted">완독한 책이 생기면 보여드릴게요.</p>'}</div>
-      <div class="card"><h3>평점 분포</h3>${rated.length ? `${distSvg}<div class="avg-note">${legend}</div>` : '<p class="muted">평점을 남긴 책이 아직 없어요.</p>'}</div>
+      <div class="card"><h3>평점 분포 <small>${rated.length}권</small></h3>${rated.length ? `<div class="hbars rt">${distRows}</div>` : '<p class="muted">평점을 남긴 책이 아직 없어요.</p>'}</div>
     </div>
   </div>`;
   $$('[data-count]', host).forEach(countUp);
@@ -1044,7 +1201,7 @@ function renderDrawer() {
   if (!d) { dr.innerHTML = ''; return; }
   const scrollTop = $('.d-body', dr)?.scrollTop || 0;
   const days = daysOf(d);
-  const g = { ...geom(d) }; const pvScale = 170 / g.H; g.H = 170; g.W = Math.max(13, Math.round(g.W * pvScale));
+  const g = { ...geom(d, true) }; const pvScale = 170 / g.H; g.H = 170; g.W = Math.max(13, Math.round(g.W * pvScale));
   const preview = spineHTML(d, g, { lean: false, sel: false });
   const lookNote = g.mode === 'img' ? (d.ownSpine ? '내가 올린 책등 사진' : 'YES24 책등 사진') : g.mode === 'cover' ? '표지가 보이게 꽂혀 있어요' : '책등 사진이 없어 색으로 보여요';
   dr.innerHTML = `
@@ -1076,7 +1233,7 @@ function renderDrawer() {
     <div class="sec"><label for="kw-in">키워드</label>
       <div class="kw" id="kw">${kwList(d).map((k, i) => `<span class="c" style="${kwStyle(k)}">${esc(k)}<button type="button" data-kwrm="${i}" aria-label="${esc(k)} 지우기">×</button></span>`).join('')}<input id="kw-in" placeholder="입력 후 Enter"></div></div>
 
-    <div class="sec"><label for="f-review">감상</label><textarea id="f-review" class="big" data-f="review" rows="9">${esc(d.review)}</textarea></div>
+    <div class="sec"><label for="f-review">감상</label><textarea id="f-review" class="big" data-f="review" rows="4">${esc(d.review)}</textarea></div>
 
     <div class="sec"><span class="lab">인상 깊은 문장</span>
       ${d.quotes.map((q, i) => `<div class="q"><textarea class="big" data-q="${i}" rows="3" placeholder="문장" aria-label="문장 ${i + 1}">${esc(q.text)}</textarea><div class="qf"><label class="qp"><input data-qp="${i}" value="${esc(q.page)}" inputmode="numeric" placeholder="00" aria-label="쪽수"><span>쪽</span></label><button type="button" class="btn ghost small" data-qrm="${i}">삭제</button></div></div>`).join('')}
@@ -1097,9 +1254,11 @@ function renderDrawer() {
 function openBook(id) {
   const b = bookById(id); if (!b) return;
   if (state.dirty && state.selected !== id && !confirm('저장하지 않은 변경이 있어요. 버리고 다른 책을 열까요?')) return;
+  const trEl = $(`tr[data-id="${CSS.escape(id)}"]`), prevTop = trEl ? trEl.getBoundingClientRect().top : null;
   state.selected = id; state.draft = JSON.parse(JSON.stringify(b)); state.dirty = false; state.conflict = false; state.lookOpen = false; closeDP(); renderSync();
   document.body.classList.add('drawer-open'); $('#drawer').setAttribute('aria-hidden', 'false');
   renderDrawer(); markSelected();
+  setTimeout(() => revealSelected(prevTop), 280);
 }
 function closeDrawer(force = false) {
   closeDP();
@@ -1750,7 +1909,10 @@ function bind() {
   });
 
   // 도구줄
-  $('#toolbar').addEventListener('click', e => { const c = e.target.closest('[data-status]'); if (c) { state.status = c.dataset.status; renderAll(); } });
+  $('#toolbar').addEventListener('click', e => {
+    const c = e.target.closest('[data-status]'); if (c) { state.status = c.dataset.status; renderAll(); return; }
+    const m = e.target.closest('[data-shelfmode]'); if (m && m.dataset.shelfmode !== state.shelfMode) { state.shelfMode = m.dataset.shelfmode; store.set('readlog.shelfMode', state.shelfMode); state.anim = true; renderAll(); }
+  });
   $('#toolbar').addEventListener('change', e => {
     if (e.target.id === 'sel-year') { state.year = e.target.value; renderAll(); }
     if (e.target.id === 'sel-sort') { state.sort = e.target.value; store.set(LS.sort, state.sort); renderAll(); }
@@ -1760,6 +1922,8 @@ function bind() {
   // 본문
   const view = $('#view');
   view.addEventListener('click', e => {
+    const pc = e.target.closest('.pcol[data-i]'); if (pc) return selectMonth(+pc.dataset.i);
+    const mb = e.target.closest('.mb[data-id]'); if (mb) return openBook(mb.dataset.id);
     const sp = e.target.closest('.spine'); if (sp) return openBook(sp.dataset.id);
     const tr = e.target.closest('tbody tr'); if (tr) return openBook(tr.dataset.id);
     const th = e.target.closest('th[data-sort]');
@@ -1769,7 +1933,7 @@ function bind() {
   view.addEventListener('load', onSpineEvent, true); view.addEventListener('error', onSpineEvent, true);
   let lastW = view.clientWidth;
   document.fonts?.ready.then(renderTabs); addEventListener('resize', renderTabs);
-  new ResizeObserver(() => { const w = view.clientWidth; if (Math.abs(w - lastW) > 4) { lastW = w; relayoutShelf(); } }).observe(view);
+  new ResizeObserver(() => { const w = view.clientWidth; if (Math.abs(w - lastW) > 4) { lastW = w; relayoutShelf(true); } }).observe(view);
   $('#banner').addEventListener('click', e => { if (e.target.closest('[data-banner]')) { state.conn?.demo ? openConn() : refresh(); } });
 
   // 서랍
@@ -1790,6 +1954,16 @@ function bind() {
   $('#imp-file').onchange = e => e.target.files[0] && readImportFile(e.target.files[0]); $('#imp-go').onclick = runImport;
   $('#link-go').onclick = runLinkAll; $('#link-redo').addEventListener('change', refreshLinkHint);
   $('#dlg-link').addEventListener('close', () => { $('#link-go').onclick = runLinkAll; });
+
+  // 드롭다운
+  document.addEventListener('click', e => {
+    const dd = e.target.closest('.dd');
+    $$('.dd.open').forEach(x => { if (x !== dd) closeDD(x); });
+    if (!dd) return;
+    const opt = e.target.closest('li[data-v]'); if (opt) return onDD(dd.dataset.dd, opt.dataset.v);
+    if (e.target.closest('.dd-btn')) toggleDD(dd);
+  });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') $$('.dd.open').forEach(closeDD); });
 
   // 단축키
   document.addEventListener('keydown', e => {

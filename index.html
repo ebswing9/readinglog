@@ -638,10 +638,6 @@ html,body{overflow-x:clip}
 .j-add svg{width:13px;height:13px}
 /* ═════════ 수정 v5 ═════════ */
 /* 읽을 책 / 중단 */
-.spine.stop{filter:saturate(.4) brightness(.96)}
-.spine .tg{position:absolute;pointer-events:none;z-index:3}
-.spine .rib{top:0;left:50%;width:clamp(8px,30%,15px);height:min(26%,60px);transform:translateX(-50%);background:linear-gradient(90deg,#B3A6DF,#D0C6EF 50%,#B3A6DF);clip-path:polygon(0 0,100% 0,100% 100%,50% 80%,0 100%)}
-.spine .band{left:0;right:0;top:38%;height:clamp(4px,3.2%,9px);background:linear-gradient(180deg,rgba(255,255,255,.3),rgba(70,62,84,.62) 40%,rgba(50,44,62,.72));box-shadow:0 1px 2px rgba(0,0,0,.25)}
 
 /* 상세 서랍 윗줄: 닫기 · (자동저장 안내) · 삭제 · 저장 */
 #drawer .d-top{padding:12px 16px 4px;border-bottom:0;gap:6px}
@@ -660,19 +656,10 @@ html,body{overflow-x:clip}
 .rating .rb,.rating .fg{position:absolute;left:0;top:0;height:24px;overflow:hidden}
 .rating .rb{width:120px;color:#E7E2D9}
 .rating .fg{color:var(--rc);transition:width .22s var(--ease),color .2s}
-.rating.hov .fg{opacity:.6;transition:none}
 .rating .rs{display:block;width:120px;max-width:none;height:24px;fill:currentColor;stroke:currentColor;stroke-width:1.6;stroke-linejoin:round}
 .rating-num{margin-left:12px;font:600 15px var(--serif);color:var(--ink2);vertical-align:middle}
 
 /* 감상 / 문장: 장식 없이 글만 */
-.note-t{display:block;width:calc(100% + 24px);margin:0 -12px;padding:10px 12px;text-align:left;border:0;border-radius:14px;background:none;color:var(--ink2);font:400 15px/1.95 var(--serif);white-space:pre-wrap;word-break:break-word;text-wrap:pretty;transition:background .2s}
-.note-t:hover{background:rgba(160,148,185,.08)}
-.qv{--qd:#CFC6EA;position:relative;display:block;width:calc(100% + 24px);margin:0 -12px 4px;padding:12px 12px 12px 26px;text-align:left;border:0;border-radius:14px;background:none;color:var(--ink);transition:background .2s}
-.qv::before{content:"";position:absolute;left:12px;top:16px;bottom:16px;width:2px;border-radius:2px;background:var(--qd)}
-.qv.q1{--qd:#E6C5C0}.qv.q2{--qd:#BCD7C5}.qv.q3{--qd:#E4D4A8}
-.qv:hover{background:rgba(160,148,185,.08)}
-.qv .qt{display:block;font:400 14.5px/1.9 var(--serif);color:#46403A;white-space:pre-wrap;word-break:break-word;text-wrap:pretty}
-.qv .qm{display:block;margin-top:5px;font-size:11.5px;color:var(--muted)}
 
 /* 쓰기 팝업: 챕터 · 쪽수 */
 .w-meta{display:flex;gap:10px;margin-top:12px}
@@ -681,12 +668,43 @@ html,body{overflow-x:clip}
 .w-meta .w-page{display:flex;align-items:center;gap:6px;flex:none;margin:0;color:var(--muted);font-size:13.5px}
 #w-page{width:84px;text-align:center}
 /* 보정: 별 색 · 팝업 입력칸 */
-.rating{--rc:#E9B24C}
 #w-text.short{min-height:0}
 .w-meta input{height:40px;padding:0 14px;border:1px solid var(--line-d);border-radius:12px;background:#FBFAFD;font:inherit;font-size:13.5px;color:var(--ink)}
 .w-meta input::placeholder{color:#B5AEA3}
 .w-meta input:focus{background:#fff}
 #w-page{width:88px}
+/* ═════════ 수정 v6 ═════════ */
+/* 책장: 읽을 책 = 눕혀 쌓아둔 책 / 중단 = 안쪽으로 밀어 넣은 책 */
+.pile{flex:none;display:flex;flex-direction:column-reverse;align-items:center;gap:1px}
+.spine.flat{position:relative;border-radius:3px;transform-origin:50% 100%;transform:translateX(var(--ox,0));background-image:linear-gradient(rgba(255,255,255,.22),rgba(255,255,255,.22)),linear-gradient(rgba(255,255,255,.22),rgba(255,255,255,.22));background-size:2px 100%,2px 100%;background-position:11px 0,16px 0;background-repeat:no-repeat}
+.spine.flat:hover{transform:translateX(var(--ox,0)) translateY(-3px)}
+.spine.flat.sel{transform:translateX(var(--ox,0)) translateY(-6px)}
+.spine.flat::after{background:linear-gradient(180deg,rgba(255,255,255,.22),rgba(255,255,255,0) 38%,rgba(0,0,0,.2))}
+.spine.flat .fi{position:absolute;left:50%;top:50%;max-width:none;object-fit:fill;transform:translate(-50%,-50%) rotate(-90deg)}
+.spine.flat .ft{position:absolute;inset:0;display:flex;align-items:center;gap:.9em;padding:0 14px 0 24px;white-space:nowrap;overflow:hidden;font-family:var(--serif);color:var(--sp-ink,#fff)}
+.spine.flat .ft b{font-weight:700;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.spine.flat .ft i{font-style:normal;font-size:.84em;opacity:.75;flex:none}
+.spine.stop{transform-origin:50% 100%;transform:translateY(-4px) scale(.93);filter:saturate(.55) brightness(.95);box-shadow:1px 1px 4px rgba(70,45,20,.14)}
+.spine.stop:hover{transform:translateY(-12px);filter:none}
+.spine.stop.sel{transform:translateY(-22px);filter:none}
+
+/* 별점: 파스텔 그라데이션 */
+.rating .rb{color:#ECE7F2}
+.rating .fg .rs path{fill:url(#starg);stroke:url(#starg)}
+
+/* 감상 / 문장: 늘 보이는 반투명 카드 */
+.note-t{display:block;width:100%;text-align:left;border:1px solid rgba(255,255,255,.85);border-radius:20px;padding:18px 20px;background:linear-gradient(150deg,rgba(255,255,255,.8),rgba(246,240,252,.64));box-shadow:0 10px 26px -16px rgba(140,120,185,.38),inset 0 1px 0 rgba(255,255,255,.9);color:#5A5470;font:400 15px/1.95 var(--serif);white-space:pre-wrap;word-break:break-word;text-wrap:pretty;transition:box-shadow .25s,background .25s}
+.note-t:hover{background:linear-gradient(150deg,rgba(255,255,255,.92),rgba(246,240,252,.76));box-shadow:0 12px 28px -16px rgba(140,120,185,.48),inset 0 1px 0 #fff}
+.qv{--g1:#EEE7FA;--g2:#E5DCF6;--qk:#C6B7EA;position:relative;display:block;width:100%;margin:0 0 14px;padding:40px 22px 14px;text-align:left;border:1px solid rgba(255,255,255,.75);border-radius:20px;background:linear-gradient(150deg,var(--g1),var(--g2));box-shadow:0 8px 18px -14px rgba(120,100,165,.42),inset 0 1px 0 rgba(255,255,255,.8);color:#554F66;transition:box-shadow .25s}
+.qv::before{content:"“";position:absolute;left:20px;top:12px;font:700 46px/1 var(--serif);color:var(--qk)}
+.qv.q1{--g1:#FBEAF0;--g2:#F6DEE7;--qk:#EDB4C8}
+.qv.q2{--g1:#E4F3EC;--g2:#D8EDE2;--qk:#A8D6BD}
+.qv.q3{--g1:#FCF3D9;--g2:#F7EAC4;--qk:#E8CE84}
+.qv.q4{--g1:#E4EFFB;--g2:#D7E6F7;--qk:#A8C5EA}
+.qv:hover{box-shadow:0 10px 20px -14px rgba(120,100,165,.55),inset 0 1px 0 #fff}
+.qv .qt{display:block;font:400 14.5px/1.9 var(--serif);white-space:pre-wrap;word-break:break-word;text-wrap:pretty}
+.qv .qm{display:block;margin-top:10px;text-align:right;font-size:11.5px;color:rgba(85,79,102,.62)}
+.j-t{color:#4F4A60}
 </style>
 </head>
 <body>
@@ -1062,8 +1080,8 @@ function spineHTML(b, g, { lean = true, sel = true, i = 0 } = {}) {
     style += `--sp-bg:${bg};--sp-ink:${inkFor(bg)};`;
     inner = `<span class="t" style="font-size:${fs.toFixed(1)}px;max-width:${g.H - 34}px"><b>${esc(b.title)}</b><i>${esc(b.author)}</i></span>`;
   }
-  const tag = b.status === '읽을 책' ? '<i class="tg rib"></i>' : b.status === '중단' ? '<i class="tg band"></i>' : '';   // 읽을 책: 책갈피 리본 / 중단: 고무줄로 묶어둠
-  return `<button type="button" class="${cls}" style="${style}" data-id="${esc(b.id)}" title="${esc(b.title)}${b.author ? ' · ' + esc(b.author) : ''}" aria-label="${esc(b.title)}">${inner}${tag}</button>`;
+
+  return `<button type="button" class="${cls}" style="${style}" data-id="${esc(b.id)}" title="${esc(b.title)}${b.author ? ' · ' + esc(b.author) : ''}" aria-label="${esc(b.title)}">${inner}</button>`;
 }
 
 
@@ -1214,6 +1232,20 @@ function decorHTML(kind) {
   }[kind];
   return `<div class="decor decor-${kind}" aria-hidden="true">${svg}</div>`;
 }
+/** 눕혀서 쌓아둘 책(읽을 책): 길이 = 책 높이, 두께 = 책등 폭 */
+function flatGeom(b) {
+  const gs = geom(b, true), f = state.shelfMode === 'cover' ? 0.62 : 1;
+  return { L: Math.round(gs.H * f), T: Math.max(15, Math.round(gs.W * f)), gs };
+}
+function flatHTML(b, fg, i) {
+  const { L, T, gs } = fg, ox = (hashStr(String(b.id)) % 13) - 6, bg = bgFor(b);
+  const inner = gs.mode === 'img'
+    ? `<img class="fi" src="${esc(gs.img)}" alt="" referrerpolicy="no-referrer" draggable="false" style="width:${T}px;height:${L}px">`
+    : `<span class="ft" style="font-size:${clamp(T * 0.46, 9, 14).toFixed(1)}px"><b>${esc(b.title)}</b><i>${esc(b.author)}</i></span>`;
+  const style = `width:${L}px;height:${T}px;--ox:${ox}px;--i:${Math.min(i, 60)};` + (gs.mode === 'img' ? '' : `--sp-bg:${bg};--sp-ink:${inkFor(bg)};`);
+  const cls = ['spine', 'flat', state.selected === b.id && 'sel'].filter(Boolean).join(' ');
+  return `<button type="button" class="${cls}" style="${style}" data-id="${esc(b.id)}" title="${esc(b.title)}${b.author ? ' · ' + esc(b.author) : ''}" aria-label="${esc(b.title)}">${inner}</button>`;
+}
 function renderShelf() {
   const host = $('#view');
   if (!state.books.length) { host.innerHTML = emptyHTML(); return; }
@@ -1221,22 +1253,31 @@ function renderShelf() {
   if (!list.length) { host.innerHTML = '<p class="empty">조건에 맞는 책이 없어요.</p>'; return; }
   const cm = state.shelfMode === 'cover';
   const avail = host.clientWidth - 2 * 10 - 2 * 26;          // 바깥 여백(10) + 칸 안쪽 여백(26)
-  // 읽는 중인 책은 "전체" 보기(책등 모드)에서만 기울여요.
-  const leanOk = state.status === 'all' && !cm, gap = cm ? 14 : 1;
-  const hs = list.map(b => geom(b).H).sort((a, b) => a - b), med = hs[hs.length >> 1];   // 칸 높이는 모두 같게
-  const rows = []; let cur = [], w = 0;
+  // "전체" 보기에서만: 읽는 중=기울어짐(책등 모드), 읽을 책=눕혀 쌓아둠, 중단=안쪽으로 밀어 넣음
+  const all = state.status === 'all', leanOk = all && !cm, gap = cm ? 14 : 1;
+  const isFlat = b => all && b.status === '읽을 책';
+  const entries = [];
   list.forEach(b => {
-    const g = geom(b), extra = leanOk && b.status === '읽는 중' ? leanShift(b, g.H) : 0, need = g.W + extra + gap;
+    if (isFlat(b)) { const last = entries[entries.length - 1]; if (last && last.pile && last.pile.length < 5) last.pile.push(b); else entries.push({ pile: [b] }); }
+    else entries.push({ b });
+  });
+  const hs = list.filter(b => !isFlat(b)).map(b => geom(b).H).sort((a, c) => a - c), med = hs.length ? hs[hs.length >> 1] : 200;   // 칸 높이는 모두 같게
+  const rows = []; let cur = [], w = 0;
+  entries.forEach(en => {
+    let need;
+    if (en.pile) { en.fgs = en.pile.map(flatGeom); en.W = Math.max(...en.fgs.map(x => x.L)) + 16; en.H = 0; need = en.W + gap; }
+    else { en.g = geom(en.b); en.H = en.g.H; need = en.g.W + (leanOk && en.b.status === '읽는 중' ? leanShift(en.b, en.g.H) : 0) + gap; }
     if (cur.length && w + need > avail) { rows.push({ items: cur, w }); cur = []; w = 0; }
-    cur.push([b, g]); w += need;
+    cur.push(en); w += need;
   });
   if (cur.length) rows.push({ items: cur, w });
   const anim = state.anim; state.anim = false;
   let idx = 0;
-  host.innerHTML = `<div class="shelf wall${cm ? ' cm' : ''}${anim ? ' anim' : ''}"><div class="case-in">` + rows.map((r, ri) => {
-    const mh = Math.max(Math.round(med * 1.1), ...r.items.map(x => x[1].H));
-    const kind = '';
-    return `<section class="row"><div class="books" style="height:${mh + 40}px">${r.items.map(([b, g]) => spineHTML(b, g, { lean: leanOk, i: idx++ })).join('')}${kind ? decorHTML(kind) : ''}</div><div class="plank"></div></section>`;
+  host.innerHTML = `<div class="shelf wall${cm ? ' cm' : ''}${anim ? ' anim' : ''}"><div class="case-in">` + rows.map(r => {
+    const mh = Math.max(Math.round(med * 1.1), ...r.items.map(x => x.H));
+    return `<section class="row"><div class="books" style="height:${mh + 40}px">${r.items.map(en => en.pile
+      ? `<div class="pile" style="width:${en.W}px">${en.pile.map((b, k) => flatHTML(b, en.fgs[k], idx++)).join('')}</div>`
+      : spineHTML(en.b, en.g, { lean: leanOk, i: idx++ })).join('')}</div><div class="plank"></div></section>`;
   }).join('') + '</div></div>';
 }
 const relayoutShelf = debounce(reveal => { if (state.view === 'shelf') { renderShelf(); if (reveal === true) revealSelected(null); } }, 140);
@@ -1419,13 +1460,11 @@ function setView(v) {
 }
 
 /* ════════════════ 상세 서랍 ════════════════ */
-const STAR_SVG = '<svg class="rs" viewBox="0 0 120 24" aria-hidden="true">' + [0, 1, 2, 3, 4].map(i => `<path transform="translate(${i * 24} 0)" d="M12 2.9l2.8 5.9 6.4.9-4.7 4.5 1.2 6.4L12 17.5l-5.7 3.1 1.2-6.4-4.7-4.5 6.4-.9z"/>`).join('') + '</svg>';
+const STAR_PATHS = [0, 1, 2, 3, 4].map(i => `<path transform="translate(${i * 24} 0)" d="M12 2.9l2.8 5.9 6.4.9-4.7 4.5 1.2 6.4L12 17.5l-5.7 3.1 1.2-6.4-4.7-4.5 6.4-.9z"/>`).join('');
+const STAR_SVG = `<svg class="rs" viewBox="0 0 120 24" aria-hidden="true">${STAR_PATHS}</svg>`;
+const STAR_SVG_FG = `<svg class="rs" viewBox="0 0 120 24" aria-hidden="true"><defs><linearGradient id="starg" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="120" y2="0"><stop offset="0" stop-color="#F5B3C6"/><stop offset=".55" stop-color="#D5B8F0"/><stop offset="1" stop-color="#B2C7F5"/></linearGradient></defs>${STAR_PATHS}</svg>`;
 function ratingHTML(v) {
-  return `<span class="rating" id="rating" role="slider" tabindex="0" aria-label="평점" aria-valuemin="0" aria-valuemax="5" aria-valuenow="${v}"><span class="rb">${STAR_SVG}</span><span class="fg" style="width:${v / 5 * 100}%">${STAR_SVG}</span></span><span class="rating-num">${v ? v.toFixed(1) : ''}</span>`;
-}
-function restoreRating(r) {
-  const v = state.draft?.rating || 0; r.classList.remove('hov');
-  r.querySelector('.fg').style.width = v / 5 * 100 + '%';
+  return `<span class="rating" id="rating" role="slider" tabindex="0" aria-label="평점" aria-valuemin="0" aria-valuemax="5" aria-valuenow="${v}"><span class="rb">${STAR_SVG}</span><span class="fg" style="width:${v / 5 * 100}%">${STAR_SVG_FG}</span></span><span class="rating-num">${v ? v.toFixed(1) : ''}</span>`;
 }
 const CAL_ICON = '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="12" height="11" rx="2.5"/><path d="M2 6.5h12M5.5 1.8v2.6M10.5 1.8v2.6"/></svg>';
 function dpField(f, label, v) {
@@ -1472,7 +1511,7 @@ function renderDrawer() {
       ${d.review ? `<button type="button" class="note-t" data-d="editreview">${esc(d.review)}</button>` : ''}</div>
 
     <div class="sec j-sec"><div class="sec-h"><span class="j-t">인상 깊은 문장${d.quotes.length ? `<em>${d.quotes.length}</em>` : ''}</span><button type="button" class="j-add" data-d="addq">${ICON_PLUS}추가</button></div>
-      ${d.quotes.map((q, i) => `<button type="button" class="qv q${i % 4}" data-qedit="${i}"><span class="qt">${esc(q.text)}</span>${q.chapter || q.page ? `<span class="qm">${[q.chapter && esc(q.chapter), q.page && esc(q.page) + '쪽'].filter(Boolean).join(' · ')}</span>` : ''}</button>`).join('')}</div>
+      ${d.quotes.map((q, i) => `<button type="button" class="qv q${i % 5}" data-qedit="${i}"><span class="qt">${esc(q.text)}</span>${q.chapter || q.page ? `<span class="qm">${[q.chapter && esc(q.chapter), q.page && esc(q.page) + '쪽'].filter(Boolean).join(' · ')}</span>` : ''}</button>`).join('')}</div>
 
     <details class="sec look-sec" ${state.lookOpen ? 'open' : ''}><summary><span class="lab">책장에서 보이는 모습</span><span class="ln">${lookNote}</span></summary>
       <div class="look"><div class="pv">${preview}</div>
@@ -2178,12 +2217,7 @@ function bind() {
   const dr = $('#drawer');
   dr.addEventListener('input', drawerInput); dr.addEventListener('change', drawerChange);
   initDP(); dr.addEventListener('click', drawerClick); dr.addEventListener('keydown', drawerKey);
-  dr.addEventListener('mousemove', e => {                      // 별 위에 마우스를 올리면 미리 보여줘요
-    const r = e.target.closest('#rating'); if (!r) return;
-    const b = r.getBoundingClientRect(), v = clamp(Math.ceil(((e.clientX - b.left) / b.width) * 10) / 2, 0.5, 5);
-    r.classList.add('hov'); r.querySelector('.fg').style.width = v / 5 * 100 + '%';
-  });
-  dr.addEventListener('mouseout', e => { const r = e.target.closest('#rating'); if (r && !r.contains(e.relatedTarget)) restoreRating(r); });
+
 
   // 대화상자
   $$('dialog [data-close]').forEach(b => b.onclick = () => b.closest('dialog').close());

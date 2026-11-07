@@ -524,15 +524,9 @@ textarea.big{min-height:96px}
 .mb em{font-style:normal;font-weight:700;font-size:12.5px;flex:none}
 .pcol{border:0;background:none;padding:0;font:inherit;color:inherit;cursor:pointer}
 .pcol:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:12px}
-.pcol .ptrack{transform-origin:50% 100%}
 .pcol.on .ptrack{box-shadow:0 0 0 2px rgba(255,255,255,.95),0 8px 18px rgba(130,115,160,.3)}
 .pcol.on .pl,.pcol.on .pv{color:var(--ink);font-weight:700}
 .pbar{position:relative}
-.pbar::before{content:"";position:absolute;left:-45%;width:190%;top:-6px;height:12px;border-radius:50%;background:var(--a);opacity:0;pointer-events:none}
-.pcol.slosh .pbar::before{animation:surf 1.5s cubic-bezier(.3,.1,.3,1) both}
-.pcol.slosh .ptrack{animation:jelly 1.1s var(--ease) both}
-@keyframes surf{0%{opacity:1;transform:rotate(-17deg) scaleY(1.7)}16%{opacity:1;transform:rotate(15deg) scaleY(1.5)}32%{opacity:1;transform:rotate(-11deg) scaleY(1.3)}50%{opacity:1;transform:rotate(7deg) scaleY(1.15)}68%{opacity:1;transform:rotate(-3.5deg) scaleY(1.05)}84%{opacity:.7;transform:rotate(1.2deg)}100%{opacity:0;transform:rotate(0)}}
-@keyframes jelly{0%{transform:scale(1,1)}18%{transform:scale(1.22,.93)}38%{transform:scale(.9,1.05)}58%{transform:scale(1.07,.98)}78%{transform:scale(.97,1.01)}100%{transform:scale(1,1)}}
 .hbars.rt{gap:9px}
 .hbars.rt .r{grid-template-columns:42px 1fr 30px}
 .hbars.rt .r em{font-style:normal}
@@ -547,6 +541,64 @@ th,td{padding-left:12px;padding-right:12px}
 .top{gap:20px}
 body.drawer-open #q{width:170px}
 body.drawer-open #q:focus{width:200px}
+/* ═════════ 수정 v3 ═════════ */
+/* 월별 막대: 차분한 세로 막대. 선택한 달만 진하게 */
+.pc{align-items:flex-end;gap:2px;padding-top:0}
+.pcol{padding:8px 2px 6px;border-radius:14px;transition:background .2s,box-shadow .2s}
+.pcol:hover{background:rgba(255,255,255,.55)}
+.pcol.on{background:rgba(255,255,255,.85);box-shadow:0 4px 14px rgba(130,115,160,.12)}
+.ptrack,.pcol:hover .ptrack{max-width:30px;border-radius:0;overflow:visible;background:transparent;transform:none;box-shadow:none}
+.pcol.on .ptrack{box-shadow:none}
+.pbar{border-radius:8px 8px 3px 3px;box-shadow:none;opacity:.5;transition:opacity .2s}
+.pcol:hover .pbar{opacity:.8}
+.pcol.on .pbar{opacity:1}
+.pcol.zero .pbar{display:block;height:3px;border-radius:2px;background:rgba(160,148,185,.3);opacity:1;animation:none}
+.pcol:hover .pv{transform:none}
+/* 그 달의 책 목록: 스크롤 없이 영역에 맞춰 크기를 줄여요 */
+.ms-list{overflow:visible;max-height:none}
+.ms-list.d1 .mb{padding:4px 8px;gap:9px}
+.ms-list.d1 .mb img{width:22px;height:32px}
+.ms-list.d1 .mb .i b{font-size:12.5px}
+.ms-list.d1 .mb .i small{font-size:11px}
+.ms-list.d2 .mb{padding:2px 6px;gap:8px}
+.ms-list.d2 .mb img{width:18px;height:26px}
+.ms-list.d2 .mb .i b{font-size:12px;line-height:1.3}
+.ms-list.d2 .mb .i small{font-size:10.5px;line-height:1.25}
+.ms-list.d2 .mb em{font-size:11.5px}
+
+/* 목록 표: 가로 스크롤 없이 칸에 맞춰 줄이기 */
+.tbl-wrap{overflow:hidden}
+table{table-layout:fixed;min-width:0;width:100%}
+th,td{padding:10px 10px;font-size:13.5px;overflow:hidden;text-overflow:ellipsis}
+th{font-size:12.5px}
+td.title{width:auto;min-width:0}
+td.title .tt{width:100%;max-width:none}
+td.au>div{max-width:none}
+td.rt,td.st{width:auto}
+th[data-sort=title]{width:24%}th[data-sort=author]{width:11%}th[data-sort=category]{width:10%}th[data-sort=keywords]{width:14%}
+th[data-sort=start]{width:10%}th[data-sort=end]{width:10%}th[data-sort=days]{width:6%}th[data-sort=rating]{width:7%}th[data-sort=status]{width:8%}
+.pill{width:auto;min-width:0;padding:0 10px}
+@media (min-width:1100px){body.drawer-open .tbl-wrap th:nth-child(5),body.drawer-open .tbl-wrap td:nth-child(5){display:none}}
+
+/* 문장 정렬 버튼 */
+.tb-btn{display:inline-flex;align-items:center;gap:7px;height:34px;padding:0 15px;font-size:13.5px}
+.tb-btn svg{transition:transform .25s var(--ease)}
+
+/* 감상·문장: 보여주는 영역 */
+.sec-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.sec-h .lab{font-size:13px;font-weight:700;color:var(--muted)}
+.vbox,.qv{display:block;width:100%;text-align:left;border:1px solid var(--line);background:#FBFAFD;color:var(--ink);transition:border-color .2s,background .2s}
+.vbox:hover,.qv:hover{border-color:var(--accent);background:#fff}
+.vbox{border-radius:14px;padding:13px 15px;font:400 14.5px/1.8 var(--serif);white-space:pre-wrap;word-break:break-word}
+.qv{margin-bottom:8px;padding:11px 14px 10px;border-left:3px solid #CFC6EA;border-radius:4px 14px 14px 4px}
+.qv .qt{display:block;font:400 14px/1.75 var(--serif);white-space:pre-wrap;word-break:break-word}
+.qv .qpg{display:block;margin-top:5px;text-align:right;font-size:12px;color:var(--muted)}
+.vempty{margin:0;padding:6px 2px 2px;font-size:13.5px;color:var(--muted)}
+/* 쓰기 팝업 */
+#w-text{display:block;width:100%;min-height:300px;padding:16px 18px;border-radius:14px;background:#FBFAFD;font:400 15.5px/1.85 var(--serif);resize:vertical}
+#w-text.short{min-height:170px}
+.dlg .bd>.w-page{display:flex;align-items:center;gap:7px;margin-top:12px;font-size:13.5px;font-weight:500;color:var(--muted)}
+.dlg .bd>.w-page input{width:72px;margin-top:0;text-align:center}
 </style>
 </head>
 <body>
@@ -653,6 +705,16 @@ body.drawer-open #q:focus{width:200px}
   <footer><span class="hint" id="link-count"></span><span class="sp"></span><button type="button" class="btn primary" id="link-go">시작</button></footer>
 </form></dialog>
 
+<!-- 감상·문장 쓰기 -->
+<dialog id="dlg-write"><form method="dialog" class="dlg" onsubmit="return false">
+  <header><h2 id="w-title">감상 쓰기</h2><button class="x" aria-label="닫기" type="button" data-close>×</button></header>
+  <div class="bd">
+    <textarea id="w-text" rows="10" aria-label="내용"></textarea>
+    <label class="w-page" id="w-pagewrap" hidden>쪽수<input id="w-page" inputmode="numeric" placeholder="00" autocomplete="off">쪽</label>
+  </div>
+  <footer><button type="button" class="btn danger" id="w-del" hidden>삭제</button><span class="hint" id="w-hint">Ctrl(⌘) + Enter로 완료</span><span class="sp"></span><button type="button" class="btn" data-close>취소</button><button type="button" class="btn primary" id="w-ok">완료</button></footer>
+</form></dialog>
+
 <script src="config.js"></script>
 <script>
 'use strict';
@@ -692,7 +754,7 @@ const state = {
   books: [], settings: {},
   view: 'shelf', status: 'all', year: 'all', q: '',
   sort: store.get(LS.sort, 'end:asc'),
-  scale: store.get(LS.scale, 1.5), shelfMode: store.get('readlog.shelfMode', 'spine'), mSel: null,
+  scale: store.get(LS.scale, 1.5), shelfMode: store.get('readlog.shelfMode', 'spine'), mSel: null, qSort: store.get('readlog.qSort', 'date'), qDir: store.get('readlog.qDir', 'desc'), qSeed: Math.random(),
   statsYear: String(new Date().getFullYear()),
   selected: null, draft: null, dirty: false, lastEdit: 0, conflict: false, anim: true,
   autosave: store.get('readlog.autosave', true), net: { w: 0, r: 0 }, sync: { last: Date.now(), err: '' },
@@ -933,6 +995,7 @@ function toggleDD(dd) {
 function onDD(id, v) {
   if (id === 'year') { state.year = v; renderAll(); }
   else if (id === 'sort') { state.sort = v; store.set(LS.sort, v); renderAll(); }
+  else if (id === 'qsort') { state.qSort = v; state.qDir = Q_DIR_DEFAULT[v] || state.qDir; if (v === 'random') state.qSeed = Math.random(); store.set('readlog.qSort', v); store.set('readlog.qDir', state.qDir); renderAll(); }
   else if (id === 'stats-year') { state.statsYear = v; state.mSel = null; renderStats(); }
 }
 
@@ -945,6 +1008,62 @@ function revealSelected(prevTop) {
   if (r.top < 74 || r.bottom > innerHeight - 16) el.scrollIntoView({ block: 'center', behavior: 'smooth' });
 }
 
+
+/* ════════════════ 문장 정렬 ════════════════ */
+const Q_SORTS = [['date', '읽은 날짜순'], ['title', '책 제목순'], ['author', '작가순'], ['rating', '평점순'], ['random', '랜덤']];
+const Q_DIR_LABEL = { date: { desc: '최근 읽은 것부터', asc: '오래된 것부터' }, title: { asc: '가나다 순', desc: '역순' }, author: { asc: '가나다 순', desc: '역순' }, rating: { desc: '높은 것부터', asc: '낮은 것부터' } };
+const Q_DIR_DEFAULT = { date: 'desc', title: 'asc', author: 'asc', rating: 'desc' };
+function qToolbarHTML() {
+  const rnd = state.qSort === 'random';
+  const act = rnd
+    ? `<button type="button" class="btn tb-btn" data-qshuffle><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5h2c3 0 4.5 7 7.5 7H14M2 11.5h2c1.3 0 2.2-1 2.9-2.2M14 4.5h-2.5c-1.3 0-2.2 1-2.9 2.2M12 2.5l2 2-2 2M12 9.5l2 2-2 2"/></svg>다시 섞기</button>`
+    : `<button type="button" class="btn tb-btn" data-qdir aria-label="정렬 순서 바꾸기"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform:rotate(${state.qDir === 'asc' ? 180 : 0}deg)"><path d="M8 3v10M4 9l4 4 4-4"/></svg>${Q_DIR_LABEL[state.qSort][state.qDir]}</button>`;
+  return `<span class="sp"></span>${ddHTML('qsort', Q_SORTS, state.qSort)}${act}`;
+}
+function sortQuotes(all) {
+  const k = state.qSort, sign = state.qDir === 'asc' ? 1 : -1;
+  all.forEach((x, i) => { x.o = i; });
+  if (k === 'random') { all.forEach(x => { x.r = hashStr(state.qSeed + '|' + x.b.id + '|' + x.o); }); all.sort((a, b) => a.r - b.r); return; }
+  const val = { date: x => x.b.endDate || x.b.startDate || '', title: x => x.b.title, author: x => x.b.author, rating: x => x.b.rating || 0 }[k] || (x => '');
+  all.sort((a, b) => {
+    const x = val(a), y = val(b);
+    if (x === '' && y === '') return a.o - b.o; if (x === '') return 1; if (y === '') return -1;     // 비어 있는 건 항상 맨 뒤
+    const c = typeof x === 'number' ? x - y : String(x).localeCompare(String(y), 'ko');
+    return c * sign || a.o - b.o;
+  });
+}
+
+/* ════════════════ 감상·문장 쓰기 팝업 ════════════════ */
+let writeCtx = null;
+function openWrite({ title, text = '', page = null, onOk, onDelete }) {
+  writeCtx = { onOk, onDelete };
+  $('#w-title').textContent = title;
+  const t = $('#w-text'); t.value = text; t.classList.toggle('short', page !== null);
+  $('#w-pagewrap').hidden = page === null; $('#w-page').value = page ?? '';
+  $('#w-del').hidden = !onDelete;
+  $('#dlg-write').showModal(); t.focus(); t.setSelectionRange(t.value.length, t.value.length);
+}
+function writeOk() {
+  const c = writeCtx; if (!c) return;
+  writeCtx = null; $('#dlg-write').close();
+  c.onOk($('#w-text').value, $('#w-page').value.trim());
+}
+function editReview() {
+  const d = state.draft; if (!d) return;
+  openWrite({ title: d.review ? '감상 수정' : '감상 쓰기', text: d.review, onOk: v => { if (v !== d.review) { d.review = v; setDirty(); } renderDrawer(); } });
+}
+function addQuote() {
+  const d = state.draft; if (!d) return;
+  openWrite({ title: '인상 깊은 문장 추가', page: '', onOk: (v, pg) => { if (v.trim()) { d.quotes.push({ text: v.replace(/\s+$/, ''), page: pg }); setDirty(); } renderDrawer(); } });
+}
+function editQuote(i) {
+  const d = state.draft, q = d?.quotes[i]; if (!q) return;
+  openWrite({
+    title: '문장 수정', text: q.text, page: q.page,
+    onOk: (v, pg) => { if (!v.trim()) d.quotes.splice(i, 1); else { q.text = v.replace(/\s+$/, ''); q.page = pg; } setDirty(); renderDrawer(); },
+    onDelete: () => { d.quotes.splice(i, 1); setDirty(); renderDrawer(); }
+  });
+}
 /* ════════════════ 화면: 상단·도구줄 ════════════════ */
 function renderTabs() {
   $$('.tabs button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.view === state.view)));
@@ -953,7 +1072,8 @@ function renderTabs() {
 }
 function renderToolbar() {
   const tb = $('#toolbar');
-  if (state.view === 'stats' || state.view === 'quotes') { tb.innerHTML = ''; return; }
+  if (state.view === 'stats') { tb.innerHTML = ''; return; }
+  if (state.view === 'quotes') { tb.innerHTML = qToolbarHTML(); return; }
   const base = visibleBooks({ ignoreStatus: true });
   const cnt = s => s === 'all' ? base.length : base.filter(b => b.status === s).length;
   const chips = [['all', '전체'], ...STATUSES.map(s => [s, s])].map(([v, l]) =>
@@ -1063,7 +1183,7 @@ function renderQuotes() {
   const terms = state.q.trim().toLowerCase().split(/\s+/).filter(Boolean);
   const all = [];
   state.books.forEach(b => (b.quotes || []).forEach(q => { if (q.text && q.text.trim()) all.push({ b, q }); }));
-  all.sort((x, y) => (y.b.endDate || y.b.startDate || '').localeCompare(x.b.endDate || x.b.startDate || ''));
+  sortQuotes(all);
   const list = all.filter(({ b, q }) => { const hay = (q.text + '\n' + b.title + '\n' + b.author).toLowerCase(); return terms.every(t => hay.includes(t)); });
   const head = `<div class="q-head"><h2>인상 깊은 문장</h2><span class="muted">${list.length}개${terms.length ? ` (전체 ${all.length}개 중)` : ''}</span></div>`;
   if (!list.length) {
@@ -1087,16 +1207,14 @@ function mSideHTML(i) {
   const { labels, groups, yr } = MDATA, list = groups[i] || [];
   const name = yr === 'all' ? labels[i] + '년' : labels[i];
   return `<div class="ms-h"><b>${esc(name)}</b><span>${list.length}권</span></div>` + (list.length
-    ? `<div class="ms-list">${list.map(b => `<button type="button" class="mb" data-id="${esc(b.id)}">${b.cover ? `<img src="${esc(b.cover)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : '<img alt="">'}<div class="i"><b>${esc(b.title)}</b><small>${esc(b.author)}</small></div>${b.rating ? `<em style="color:var(--c${rTier(b.rating)})">★ ${b.rating.toFixed(1)}</em>` : ''}</button>`).join('')}</div>`
+    ? `<div class="ms-list ${list.length >= 9 ? 'd2' : list.length >= 5 ? 'd1' : ''}">${list.map(b => `<button type="button" class="mb" data-id="${esc(b.id)}">${b.cover ? `<img src="${esc(b.cover)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : '<img alt="">'}<div class="i"><b>${esc(b.title)}</b><small>${esc(b.author)}</small></div>${b.rating ? `<em style="color:var(--c${rTier(b.rating)})">★ ${b.rating.toFixed(1)}</em>` : ''}</button>`).join('')}</div>`
     : '<p class="muted ms-empty">이 기간에 완독한 책이 없어요.</p>');
 }
-/** 막대를 누르면: 액체가 출렁이고, 오른쪽에 그 달의 책이 나와요. */
+/** 막대를 누르면 오른쪽에 그 달의 책이 나와요. */
 function selectMonth(i) {
   state.mSel = i;
   $$('.pcol[data-i]').forEach(c => c.classList.toggle('on', +c.dataset.i === i));
   const side = $('#mside'); if (side) side.innerHTML = mSideHTML(i);
-  const col = $(`.pcol[data-i="${i}"]`);
-  if (col) { clearTimeout(col._t); col.classList.remove('slosh'); void col.offsetWidth; col.classList.add('slosh'); col._t = setTimeout(() => col.classList.remove('slosh'), 1700); }
 }
 function countUp(el) {
   const to = +el.dataset.count; if (!to || matchMedia('(prefers-reduced-motion:reduce)').matches) return;
@@ -1127,7 +1245,7 @@ function renderStats() {
   if (state.mSel == null || state.mSel >= labels.length) state.mSel = nowM >= 0 ? nowM : Math.max(0, peakI);
   MDATA = { labels, groups, yr };
   const mItems = counts.map((c, i) => ({ v: c, label: yr === 'all' ? labels[i] : String(i + 1), title: `${labels[i]} · ${c}권`, now: i === nowM, sel: i === state.mSel, c1: yr === 'all' ? '#E4DCF6' : MCOL[i][0], c2: yr === 'all' ? '#B8A8E6' : MCOL[i][1] }));
-  const monthly = pillChart(mItems, { h: 150 }) + (mxC > 0 ? `<p class="pnote">가장 많이 읽은 ${yr === 'all' ? '해' : '달'}는 <b>${labels[peakI]}</b>, ${mxC}권이에요.</p>` : '<p class="pnote">아직 완독한 책이 없어요.</p>');
+  const monthly = pillChart(mItems, { h: 150 });
 
   // 분류별
   const cat = {}; done.forEach(b => { const c = b.category || '분류 없음'; cat[c] = (cat[c] || 0) + 1; });
@@ -1165,7 +1283,7 @@ function renderStats() {
       <div class="card kpi"><dt>읽는 중</dt><dd>${state.books.filter(b => b.status === '읽는 중').length}<small>권</small></dd></div>
       <div class="card kpi"><dt>읽을 책</dt><dd>${state.books.filter(b => b.status === '읽을 책').length}<small>권</small></dd></div>
     </dl>
-    <div class="card mcard"><div class="m-main"><h3>${yr === 'all' ? '연도별' : '월별'} 읽은 권수 <small>막대를 누르면 그때 읽은 책이 보여요</small></h3>${monthly}</div><aside class="m-side" id="mside" aria-live="polite">${mSideHTML(state.mSel)}</aside></div>
+    <div class="card mcard"><div class="m-main"><h3>${yr === 'all' ? '연도별' : '월별'} 읽은 권수</h3>${monthly}</div><aside class="m-side" id="mside" aria-live="polite">${mSideHTML(state.mSel)}</aside></div>
     <div class="grid2">
       <div class="card"><h3>분류별 <small>상위 8개</small></h3>${catHTML ? `<div class="hbars">${catHTML}</div>` : '<p class="muted">완독한 책이 생기면 보여드릴게요.</p>'}</div>
       <div class="card"><h3>평점 분포 <small>${rated.length}권</small></h3>${rated.length ? `<div class="hbars rt">${distRows}</div>` : '<p class="muted">평점을 남긴 책이 아직 없어요.</p>'}</div>
@@ -1233,11 +1351,11 @@ function renderDrawer() {
     <div class="sec"><label for="kw-in">키워드</label>
       <div class="kw" id="kw">${kwList(d).map((k, i) => `<span class="c" style="${kwStyle(k)}">${esc(k)}<button type="button" data-kwrm="${i}" aria-label="${esc(k)} 지우기">×</button></span>`).join('')}<input id="kw-in" placeholder="입력 후 Enter"></div></div>
 
-    <div class="sec"><label for="f-review">감상</label><textarea id="f-review" class="big" data-f="review" rows="4">${esc(d.review)}</textarea></div>
+    <div class="sec"><div class="sec-h"><span class="lab">감상</span><button type="button" class="btn small" data-d="editreview">${d.review ? '수정' : '작성'}</button></div>
+      ${d.review ? `<button type="button" class="vbox" data-d="editreview">${esc(d.review)}</button>` : '<p class="vempty">아직 남긴 감상이 없어요.</p>'}</div>
 
-    <div class="sec"><span class="lab">인상 깊은 문장</span>
-      ${d.quotes.map((q, i) => `<div class="q"><textarea class="big" data-q="${i}" rows="3" placeholder="문장" aria-label="문장 ${i + 1}">${esc(q.text)}</textarea><div class="qf"><label class="qp"><input data-qp="${i}" value="${esc(q.page)}" inputmode="numeric" placeholder="00" aria-label="쪽수"><span>쪽</span></label><button type="button" class="btn ghost small" data-qrm="${i}">삭제</button></div></div>`).join('')}
-      <button type="button" class="btn small" data-d="addq">문장 추가</button></div>
+    <div class="sec"><div class="sec-h"><span class="lab">인상 깊은 문장</span><button type="button" class="btn small" data-d="addq">추가</button></div>
+      ${d.quotes.length ? d.quotes.map((q, i) => `<button type="button" class="qv" data-qedit="${i}"><span class="qt">${esc(q.text)}</span>${q.page ? `<span class="qpg">${esc(q.page)}쪽</span>` : ''}</button>`).join('') : '<p class="vempty">아직 남긴 문장이 없어요.</p>'}</div>
 
     <details class="sec look-sec" ${state.lookOpen ? 'open' : ''}><summary><span class="lab">책장에서 보이는 모습</span><span class="ln">${lookNote}</span></summary>
       <div class="look"><div class="pv">${preview}</div>
@@ -1424,12 +1542,13 @@ async function drawerClick(e) {
   if (t.id === 'rating') return setRatingFromEvent(e);
   if (t.dataset.dp) return toggleDP(t);
   if (t.dataset.kwrm !== undefined) { const l = kwList(d); l.splice(+t.dataset.kwrm, 1); d.keywords = l.join(', '); setDirty(); return renderDrawer(); }
-  if (t.dataset.qrm !== undefined) { d.quotes.splice(+t.dataset.qrm, 1); setDirty(); return renderDrawer(); }
+  if (t.dataset.qedit !== undefined) return editQuote(+t.dataset.qedit);
   switch (t.dataset.d) {
     case 'close': return closeDrawer();
     case 'save': return saveDraft();
     case 'delete': return deleteDraft();
-    case 'addq': d.quotes.push({ text: '', page: '' }); setDirty(); renderDrawer(); return $$('#drawer textarea[data-q]').pop()?.focus();
+    case 'addq': return addQuote();
+    case 'editreview': return editReview();
     case 'facing': d.faceOut = !d.faceOut; setDirty(); return renderDrawer();
     case 'uploadspine': return $('#spine-file').click();
     case 'rmspine': return removeOwnSpine();
@@ -1911,6 +2030,8 @@ function bind() {
   // 도구줄
   $('#toolbar').addEventListener('click', e => {
     const c = e.target.closest('[data-status]'); if (c) { state.status = c.dataset.status; renderAll(); return; }
+    if (e.target.closest('[data-qdir]')) { state.qDir = state.qDir === 'asc' ? 'desc' : 'asc'; store.set('readlog.qDir', state.qDir); renderAll(); return; }
+    if (e.target.closest('[data-qshuffle]')) { state.qSeed = Math.random(); renderAll(); return; }
     const m = e.target.closest('[data-shelfmode]'); if (m && m.dataset.shelfmode !== state.shelfMode) { state.shelfMode = m.dataset.shelfmode; store.set('readlog.shelfMode', state.shelfMode); state.anim = true; renderAll(); }
   });
   $('#toolbar').addEventListener('change', e => {
@@ -1954,6 +2075,12 @@ function bind() {
   $('#imp-file').onchange = e => e.target.files[0] && readImportFile(e.target.files[0]); $('#imp-go').onclick = runImport;
   $('#link-go').onclick = runLinkAll; $('#link-redo').addEventListener('change', refreshLinkHint);
   $('#dlg-link').addEventListener('close', () => { $('#link-go').onclick = runLinkAll; });
+
+  // 쓰기 팝업
+  $('#w-ok').onclick = writeOk;
+  $('#w-del').onclick = () => { if (!confirm('이 문장을 삭제할까요?')) return; const c = writeCtx; writeCtx = null; $('#dlg-write').close(); c?.onDelete?.(); };
+  $('#w-text').addEventListener('keydown', e => { if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); writeOk(); } });
+  $('#dlg-write').addEventListener('close', () => { writeCtx = null; });
 
   // 드롭다운
   document.addEventListener('click', e => {

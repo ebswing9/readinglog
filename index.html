@@ -746,6 +746,8 @@ body.drawer-open .size input{width:84px}
 .ls-r input[type=range]{-webkit-appearance:none;appearance:none;height:4px;border-radius:99px;background:rgba(196,160,152,.3);outline:none}
 .ls-r input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;border-radius:50%;background:#fff;border:2px solid var(--accent);box-shadow:0 1px 3px rgba(120,80,70,.25);cursor:pointer}
 .ls-r input[type=range]::-moz-range-thumb{width:11px;height:11px;border-radius:50%;background:#fff;border:2px solid var(--accent);cursor:pointer}
+.qcard .qch{margin:10px 0 0;text-align:right;font:400 13px/1.4 var(--serif);color:rgba(103,82,87,.7)}
+.qcard .qch::before{content:"— "}
 </style>
 </head>
 <body>
@@ -1234,13 +1236,14 @@ function writeMore() {
   c.onMore(t.value, $('#w-page').value.trim(), $('#w-chapter').value.trim()); c.n++;
   t.value = ''; $('#w-page').value = ''; $('#w-hint').textContent = `${c.n}개 추가했어요 · 이어서 쓰세요`; t.focus();
 }
+// 팝업이 열려 있는 동안 자동 저장이 끝나면 state.draft가 새 객체로 바뀌어요. 그래서 반드시 "쓰는 순간의" state.draft에 넣어요.
 function editReview() {
-  const d = state.draft; if (!d) return;
-  openWrite({ title: d.review ? '감상 수정' : '감상 쓰기', text: d.review, onOk: v => { if (v !== d.review) { d.review = v; setDirty(); } renderDrawer(); } });
+  if (!state.draft) return;
+  openWrite({ title: state.draft.review ? '감상 수정' : '감상 쓰기', text: state.draft.review, onOk: v => { const d = state.draft; if (d && v !== d.review) { d.review = v; setDirty(); } renderDrawer(); } });
 }
 function addQuote() {
-  const d = state.draft; if (!d) return;
-  const push = (v, pg, ch) => { d.quotes.push({ text: v.replace(/\s+$/, ''), page: pg, chapter: ch }); setDirty(); };
+  if (!state.draft) return;
+  const push = (v, pg, ch) => { const d = state.draft; if (!d) return; d.quotes.push({ text: v.replace(/\s+$/, ''), page: pg, chapter: ch }); setDirty(); };
   openWrite({
     title: '인상 깊은 문장 추가', page: '', chapter: '',
     onMore: (v, pg, ch) => { push(v, pg, ch); renderDrawer(); },
@@ -1248,11 +1251,15 @@ function addQuote() {
   });
 }
 function editQuote(i) {
-  const d = state.draft, q = d?.quotes[i]; if (!q) return;
+  const q0 = state.draft?.quotes[i]; if (!q0) return;
   openWrite({
-    title: '문장 수정', text: q.text, page: q.page, chapter: q.chapter || '',
-    onOk: (v, pg, ch) => { if (!v.trim()) d.quotes.splice(i, 1); else { q.text = v.replace(/\s+$/, ''); q.page = pg; q.chapter = ch; } setDirty(); renderDrawer(); },
-    onDelete: () => { d.quotes.splice(i, 1); setDirty(); renderDrawer(); }
+    title: '문장 수정', text: q0.text, page: q0.page, chapter: q0.chapter || '',
+    onOk: (v, pg, ch) => {
+      const d = state.draft, q = d?.quotes[i]; if (!q) return;
+      if (!v.trim()) d.quotes.splice(i, 1); else { q.text = v.replace(/\s+$/, ''); q.page = pg; q.chapter = ch; }
+      setDirty(); renderDrawer();
+    },
+    onDelete: () => { const d = state.draft; if (!d) return; d.quotes.splice(i, 1); setDirty(); renderDrawer(); }
   });
 }
 /* ════════════════ 화면: 상단·도구줄 ════════════════ */
@@ -1324,20 +1331,16 @@ function renderShelf() {
   const isFlat = b => all && (b.status === '읽을 책' || b.status === '중단');
   const standing = list.filter(b => !isFlat(b)), flats = list.filter(isFlat);
   const hs = standing.map(b => geom(b).H).sort((a, c) => a - c), med = hs.length ? hs[hs.length >> 1] : 200;   // 칸 높이는 모두 같게
-  // 눕힌 책(읽을 책·중단): 정렬과 상관없이 한 더미로 위로 쌓아요. 너무 높아지면 옆에 새 더미를 만들어요.
-  const piles = []; let cp = null, ch = 0;
-  flats.forEach(b => {
+  // 눕힌 책(읽을 책·중단): 정렬 순서에서 처음 나오는 눕힌 책의 자리에 더미를 만들고, 뒤에 나오는 눕힌 책도 그 더미 위로 쌓아요.
+  // 더미가 한 칸 높이를 넘으면, 그다음으로 눕혀야 하는 책의 자리에서 새 더미를 시작해요. (a b c d e 에서 b·e가 눕힌 책 → a (b·e) c d)
+  const entries = []; let cp = null, ch = 0;
+  list.forEach(b => {
+    if (!isFlat(b)) { entries.push({ b }); return; }
     const fg = flatGeom(b);
-    if (!cp || ch + fg.T + 1 > Math.round(med * 1.1)) { cp = { pile: [], fgs: [], ml: 0, mr: 0 }; piles.push(cp); ch = 0; }
+    if (!cp || ch + fg.T + 1 > Math.round(med * 1.1)) { cp = { pile: [], fgs: [], ml: 0, mr: 0 }; entries.push(cp); ch = 0; }
     cp.pile.push(b); cp.fgs.push(fg); ch += fg.T + 1;
   });
-  // 더미는 정렬 순서상 처음 눕혀야 하는 책이 있던 자리에 놓고, 나머지 눕힌 책도 모두 그 더미로 모아요. (a b c d e 에서 b·e가 눕힌 책이면 → a (b·e) c d)
-  const firstFlat = list.findIndex(isFlat), entries = [];
-  list.forEach((b, i) => { if (!isFlat(b)) entries.push({ b }); else if (i === firstFlat) piles.forEach(pl => entries.push(pl)); });
-  if (piles.length) {
-    if (firstFlat > 0) piles[0].ml = 24;
-    if (list.slice(firstFlat + 1).some(b => !isFlat(b))) piles[piles.length - 1].mr = 24;
-  }
+  entries.forEach((en, i) => { if (en.pile) { if (i > 0 && !entries[i - 1].pile) en.ml = 24; if (i < entries.length - 1 && !entries[i + 1].pile) en.mr = 24; } });
   const rows = []; let cur = [], w = 0;
   entries.forEach(en => {
     let need;
@@ -1418,8 +1421,8 @@ function renderQuotes() {
   }
   host.innerHTML = `<div class="quotes">${head}<div class="q-grid">${list.map(({ b, q }) => `
     <figure class="qcard" data-qid="${esc(b.id)}" tabindex="0">
-      <blockquote>${esc(q.text)}</blockquote>
-      <figcaption>${b.cover ? `<img src="${esc(b.cover)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : ''}<span><b>${esc(b.title)}</b>${b.author ? ' · ' + esc(b.author) : ''}${q.chapter ? ` · ${esc(q.chapter)}` : ''}${q.page ? ` · ${esc(q.page)}쪽` : ''}</span></figcaption>
+      <blockquote>${esc(q.text)}</blockquote>${q.chapter ? `<p class="qch">${esc(q.chapter)}</p>` : ''}
+      <figcaption>${b.cover ? `<img src="${esc(b.cover)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : ''}<span><b>${esc(b.title)}</b>${b.author ? ' · ' + esc(b.author) : ''}${q.page ? ` · ${esc(q.page)}쪽` : ''}</span></figcaption>
     </figure>`).join('')}</div></div>`;
 }
 
@@ -1656,6 +1659,7 @@ async function saveDraft({ quiet = false, auto = false } = {}) {
 }
 function autoSaveTick() {
   if (!state.autosave || !state.dirty || !state.draft || state.net.w || state.conflict) return;
+  if (writeCtx) return;                                 // 감상·문장을 쓰는 중에는 저장하지 않아요
   if (Date.now() - state.lastEdit < 3500) return;       // 타이핑이 잠깐 멈췄을 때 저장해요
   saveDraft({ auto: true });
 }

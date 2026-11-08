@@ -1191,9 +1191,9 @@ const ICON_TRASH = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" s
 const ICON_CHECK = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5l3.2 3.2L13 4.8"/></svg>';
 
 /* ════════════════ 문장 정렬 ════════════════ */
-const Q_SORTS = [['date', '읽은 날짜순'], ['title', '책 제목순'], ['author', '작가순'], ['rating', '평점순']];
-const Q_DIR_LABEL = { date: { desc: '최근 읽은 것부터', asc: '오래된 것부터' }, title: { asc: '가나다 순', desc: '역순' }, author: { asc: '가나다 순', desc: '역순' }, rating: { desc: '높은 것부터', asc: '낮은 것부터' } };
-const Q_DIR_DEFAULT = { date: 'desc', title: 'asc', author: 'asc', rating: 'desc' };
+const Q_SORTS = [['date', '읽은 날짜순'], ['title', '책 제목순'], ['author', '작가순'], ['rating', '평점순'], ['length', '글자수순']];
+const Q_DIR_LABEL = { date: { desc: '최근 읽은 것부터', asc: '오래된 것부터' }, title: { asc: '가나다 순', desc: '역순' }, author: { asc: '가나다 순', desc: '역순' }, rating: { desc: '높은 것부터', asc: '낮은 것부터' }, length: { asc: '짧은 것부터', desc: '긴 것부터' } };
+const Q_DIR_DEFAULT = { date: 'desc', title: 'asc', author: 'asc', rating: 'desc', length: 'asc' };
 function qToolbarHTML() {
   const rnd = state.qSort === 'random';
   const dir = rnd ? '' : `<button type="button" class="btn tb-btn" data-qdir aria-label="정렬 순서 바꾸기"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform:rotate(${state.qDir === 'asc' ? 180 : 0}deg)"><path d="M8 3v10M4 9l4 4 4-4"/></svg>${Q_DIR_LABEL[state.qSort][state.qDir]}</button>`;
@@ -1204,7 +1204,7 @@ function sortQuotes(all) {
   const k = state.qSort, sign = state.qDir === 'asc' ? 1 : -1;
   all.forEach((x, i) => { x.o = i; });
   if (k === 'random') { all.forEach(x => { x.r = hashStr(state.qSeed + '|' + x.b.id + '|' + x.o); }); all.sort((a, b) => a.r - b.r); return; }
-  const val = { date: x => x.b.endDate || x.b.startDate || '', title: x => x.b.title, author: x => x.b.author, rating: x => x.b.rating || 0 }[k] || (x => '');
+  const val = { date: x => x.b.endDate || x.b.startDate || '', title: x => x.b.title, author: x => x.b.author, rating: x => x.b.rating || 0, length: x => [...String(x.q.text || '').replace(/\s/g, '')].length }[k] || (x => '');
   all.sort((a, b) => {
     const x = val(a), y = val(b);
     if (x === '' && y === '') return a.o - b.o; if (x === '') return 1; if (y === '') return -1;     // 비어 있는 건 항상 맨 뒤

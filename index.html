@@ -473,27 +473,37 @@ body.pinned #drawer{box-shadow:-10px 0 40px rgba(120,100,80,.06)}
 .fl-f .spine{position:absolute;inset:0;width:100%!important;height:100%!important;margin:0!important;transform:none!important;animation:none!important;box-shadow:none;opacity:1!important}
 .fl-noc{width:100%;height:100%;display:flex;flex-direction:column;justify-content:center;padding:12%;gap:6px;font-family:var(--serif);text-align:left}
 .fl-noc b{font-size:15px;line-height:1.3}.fl-noc i{font-style:normal;font-size:11px;opacity:.8}
-/* 책장 조명 */
 .wall{position:relative;isolation:isolate}
-.wall::before{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(180deg,#2F2B39,#1D1A25);opacity:0;transition:opacity .8s var(--ease);z-index:0;pointer-events:none}
-.wall.dark::before{opacity:1}
-.wall::after{content:"";position:absolute;left:9%;right:9%;top:16px;height:74%;background:linear-gradient(180deg,rgba(255,229,166,.5),rgba(255,229,166,0));clip-path:polygon(8% 0,92% 0,100% 100%,0 100%);transition:opacity .8s var(--ease);z-index:0;pointer-events:none}
-.wall.dark::after{opacity:0}
-.wall>.row{position:relative;z-index:1}
-.lamp{position:absolute;z-index:2;left:50%;top:8px;transform:translateX(-50%);width:min(46%,560px);height:18px;border:0;padding:0;background:none;cursor:pointer}
-.lamp .lbar{display:block;height:7px;margin:5px 0;border-radius:99px;background:linear-gradient(180deg,#FFF4D2,#F5D88E);box-shadow:0 0 22px 5px rgba(255,226,150,.7),0 2px 4px rgba(120,90,50,.25);transition:background .6s,box-shadow .6s}
-.lamp:hover .lbar{filter:brightness(1.06)}
-.wall.dark .lamp .lbar{background:linear-gradient(180deg,#7C7686,#5F5A69);box-shadow:0 2px 4px rgba(0,0,0,.45)}
-.spine{transition:transform .35s var(--ease),box-shadow .3s,filter .7s}
-.wall.dark .spine{filter:brightness(.52) saturate(.85)}
-.wall.dark .spine:hover,.wall.dark .spine.sel{filter:brightness(1.02) saturate(1)}
-.wall.dark .plank{filter:brightness(.5)}
-.wall.dark .decor{filter:brightness(.55)}
-.plank,.decor{transition:filter .7s}
 
 body.pinned #drawer{top:64px;border-radius:24px 0 0 0}
 @media (min-width:1100px){body.pinned.drawer-open .top{padding-right:var(--pad)}}
 .brand,.tabs button{white-space:nowrap}
+
+/* ═════════ 눕힌 책 · 패널 첫 화면 ═════════ */
+.pile{position:relative;flex:none;align-self:flex-end;margin:0 6px 0 4px}
+.spine.lying{position:absolute;border-radius:3px;transform-origin:center;box-shadow:2px 3px 8px rgba(90,70,50,.22)}
+.spine.lying:hover{transform:rotate(var(--rot,0deg)) translateX(10px)}
+.spine.lying.sel{transform:rotate(var(--rot,0deg)) translateX(18px)}
+.spine.lying .rot{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(-90deg)}
+.spine.lying .rot img{position:absolute;inset:0;width:100%;height:100%;object-fit:fill}
+.spine.lying::after{background:linear-gradient(180deg,rgba(255,255,255,.1),rgba(0,0,0,0) 25%,rgba(0,0,0,0) 70%,rgba(0,0,0,.22))}
+.spine.lying.text::before{display:none}
+.spine.lying.text .lt{position:absolute;inset:0;display:flex;align-items:center;gap:.9em;padding:0 16px;font-family:var(--serif);white-space:nowrap;overflow:hidden;color:var(--sp-ink,#fff)}
+.spine.lying.text .lt i{font-style:normal;opacity:.75;font-size:.82em}
+.spine.lying.quit{filter:saturate(.55)}
+.ph{padding:22px 22px 30px;overflow:auto;height:calc(100% - 58px)}
+.ph h3{margin:20px 0 8px;font:700 13px var(--sans);color:var(--muted);letter-spacing:.02em}
+.ph h3:first-child{margin-top:4px}
+.ph-item{display:flex;align-items:center;gap:14px;width:100%;text-align:left;border:0;background:none;padding:8px 10px;border-radius:14px;transition:background .2s,transform .2s var(--ease)}
+.ph-item:hover{background:var(--accent-soft);transform:translateX(3px)}
+.ph-item img,.ph-nc{width:38px;height:54px;border-radius:3px 5px 5px 3px;object-fit:cover;flex:none;box-shadow:0 3px 10px rgba(0,0,0,.18);background:var(--line)}
+.ph-t{min-width:0;display:grid;gap:2px}
+.ph-t b{font:700 15px/1.35 var(--serif);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ph-t i{font-style:normal;font-size:12.5px;color:var(--muted)}
+.ph-none{margin:6px 10px;font-size:13.5px;color:var(--muted)}
+
+.fly.ly .fl-b{transform:none}
+.fly.ly .fl-f{display:none}
 </style>
 </head>
 <body>
@@ -644,7 +654,7 @@ const state = {
   statsYear: String(new Date().getFullYear()),
   selected: null, draft: null, dirty: false, lastEdit: 0, conflict: false, anim: true,
   autosave: store.get('readlog.autosave', true),
-  pinned: store.get('readlog.pinned', true), light: store.get('readlog.light', true), faceReading: store.get('readlog.face', true), pulledId: null, net: { w: 0, r: 0 }, sync: { last: Date.now(), err: '' },
+  pinned: store.get('readlog.pinned', true), faceReading: store.get('readlog.face', true), pulledId: null, net: { w: 0, r: 0 }, sync: { last: Date.now(), err: '' },
   linkTarget: null, badSpine: new Set(), pendingAspect: new Map(), busy: false
 };
 
@@ -816,11 +826,26 @@ function thickMm(b) {
   if (b.thicknessMm >= 6 && b.thicknessMm <= 70) return b.thicknessMm;
   return b.pages ? clamp(b.pages * 0.055 + 3, 8, 55) : 18;
 }
-function geom(b) {
+/* 같은 시리즈(제목에서 권수를 뺀 것 + 작가가 같은 책)는 높이를 맞춰요. YES24에 적힌 판형이 권마다 조금씩 달라서 생기는 들쭉날쭉을 없애요. */
+let SERIES_H = new Map();
+function seriesKey(b) {
+  const t = String(b.title || '').replace(/\(.*?\)|\[.*?\]/g, ' ').replace(/[\s\-–:,·]*제?\s*\d+\s*[권부장편]?\s*$/, '').replace(/\s+(상|중|하|[ⅠⅡⅢⅣⅤⅥ]+)\s*$/, '').replace(/\s+/g, ' ').trim().toLowerCase();
+  return t.length >= 2 ? t + '|' + String(b.author || '').split(/[,·&]/)[0].trim().toLowerCase() : '';
+}
+function buildSeries() {
+  const g = new Map(); SERIES_H = new Map();
+  state.books.forEach(b => { const k = seriesKey(b); if (k) (g.get(k) || g.set(k, []).get(k)).push(b); });
+  g.forEach(arr => {
+    if (arr.length < 2) return;
+    const hs = arr.map(x => x.heightMm).filter(h => h >= 100 && h <= 400).sort((a, b) => a - b);
+    const h = hs.length ? hs[Math.floor(hs.length / 2)] : DEFAULT_H_MM; arr.forEach(x => SERIES_H.set(x.id, h));
+  });
+}
+function geom(b, { noCover = false } = {}) {
   const s = state.scale;
-  const hMm = b.heightMm >= 100 && b.heightMm <= 400 ? b.heightMm : DEFAULT_H_MM * (0.96 + (hash(b.id) % 9) / 100);
+  const hMm = SERIES_H.has(b.id) ? SERIES_H.get(b.id) : b.heightMm >= 100 && b.heightMm <= 400 ? b.heightMm : DEFAULT_H_MM * (0.96 + (hash(b.id) % 9) / 100);
   const H = Math.round(hMm * s);
-  if ((b.faceOut || (state.faceReading && b.status === '읽는 중')) && b.cover) { const Hc = Math.round(H * 0.8); return { H: Hc, W: Math.round(Hc * 0.68), mode: 'cover' }; }   // 표지는 책장에서 조금 작게
+  if (!noCover && (b.faceOut || (state.faceReading && b.status === '읽는 중')) && b.cover) { const Hc = Math.round(H * 0.8); return { H: Hc, W: Math.round(Hc * 0.68), mode: 'cover' }; }   // 표지는 책장에서 조금 작게
   const img = spineUrl(b);
   if (img && !(state.badSpine.has(b.id) && !b.ownSpine)) {
     // 두께는 쪽수(또는 YES24가 준 실제 두께)를 기준으로 정해요. 쪽수 정보가 없으면 사진 비율을 써요.
@@ -843,7 +868,7 @@ function leanInfo(b) {
 }
 const leanShift = (b, H) => Math.round(H * Math.sin(leanInfo(b).deg * Math.PI / 180));
 function spineHTML(b, g, { lean = true, sel = true, i = 0 } = {}) {
-  const isLean = lean && b.status === '읽는 중';
+  const isLean = lean && b.status === '읽는 중' && g.mode !== 'cover';   // 표지가 보이게 꽂은 책은 똑바로 세워요
   const L = isLean ? leanInfo(b) : null;
   const cls = ['spine', g.mode, isLean && 'lean', isLean && L.dir > 0 && 'lean-r', b.status === '읽을 책' && 'todo', sel && state.selected === b.id && 'sel', sel && state.pulledId === b.id && 'out'].filter(Boolean).join(' ');
   let style = `width:${g.W}px;height:${g.H}px;--i:${Math.min(i, 60)};`;
@@ -876,8 +901,7 @@ function renderToolbar() {
   const yearSel = `<select id="sel-year" aria-label="연도"><option value="all">전체 연도</option>${years.map(y => `<option value="${y}" ${state.year === y ? 'selected' : ''}>${y}년</option>`).join('')}</select>`;
   const sortSel = `<select id="sel-sort" aria-label="정렬">${SORT_OPTIONS.map(([v, l]) => `<option value="${v}" ${state.sort === v ? 'selected' : ''}>${l}</option>`).join('')}</select>`;
   const size = state.view === 'shelf' ? `<label class="size">책 크기<input id="rng-size" type="range" min="0.9" max="2" step="0.05" value="${state.scale}"></label>` : '';
-  const BULB = '<svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 14.5h6M8 17h4M10 2.5a5 5 0 0 0-2.8 9.1c.5.4.8 1 .8 1.6V14h4v-.8c0-.6.3-1.2.8-1.6A5 5 0 0 0 10 2.5z"/></svg>';
-  const tgls = state.view === 'shelf' ? `<button class="chip-b tgl" data-tgl="face" aria-pressed="${state.faceReading}" title="읽는 중인 책을 표지가 보이게 꽂아요">읽는 중은 표지로</button><button class="chip-b tgl" data-tgl="light" aria-pressed="${state.light}" title="책장 조명 켜기/끄기">${BULB}조명</button>` : '';
+  const tgls = state.view === 'shelf' ? `<button class="chip-b tgl" data-tgl="face" aria-pressed="${state.faceReading}" title="읽는 중인 책을 표지가 보이게 꽂아요">읽는 중은 표지로</button>` : '';
   tb.innerHTML = `<div class="chips">${chips}</div><span class="sp"></span>${tgls}${yearSel}${sortSel}${size}`;
 }
 function banner(msg, err = false, action = '') {
@@ -902,29 +926,74 @@ function decorHTML(kind) {
   }[kind];
   return `<div class="decor decor-${kind}" aria-hidden="true">${svg}</div>`;
 }
+const LYING = new Set(['읽을 책', '중단']);
+function lyingHTML(b, g, { left, bottom, rot, i }) {
+  let style = `width:${g.H}px;height:${g.W}px;left:${left}px;bottom:${bottom}px;--rot:${rot.toFixed(2)}deg;--i:${Math.min(i, 60)};`, inner;
+  if (g.mode === 'img') inner = `<span class="rot" style="width:${g.W}px;height:${g.H}px"><img src="${esc(g.img)}" alt="" referrerpolicy="no-referrer" draggable="false" data-mode="spine"></span>`;
+  else {
+    const bg = bgFor(b); style += `--sp-bg:${bg};--sp-ink:${inkFor(bg)};`;
+    inner = `<span class="lt" style="font-size:${clamp(g.W * 0.5, 10, 15).toFixed(1)}px"><b>${esc(b.title)}</b><i>${esc(b.author)}</i></span>`;
+  }
+  const cls = ['spine', 'lying', g.mode === 'img' ? 'img' : 'text', b.status === '중단' && 'quit', state.selected === b.id && 'sel', state.pulledId === b.id && 'out'].filter(Boolean).join(' ');
+  return `<button type="button" class="${cls}" style="${style}" data-id="${esc(b.id)}" title="${esc(b.title)}${b.author ? ' · ' + esc(b.author) : ''}" aria-label="${esc(b.title)}">${inner}</button>`;
+}
 function renderShelf() {
   const host = $('#view');
   if (!state.books.length) { host.innerHTML = emptyHTML(); return; }
   const list = visibleBooks();
   if (!list.length) { host.innerHTML = '<p class="empty">조건에 맞는 책이 없어요.</p>'; return; }
+  buildSeries();
   const avail = host.clientWidth - 2 * 12 - 2 * 28;
-  // 읽는 중인 책은 "전체" 보기에서만 기울여요. "읽는 중" 탭이나 다른 탭에서는 똑바로 서요.
+  // 읽는 중인 책은 "전체" 보기에서만 기울여요(표지가 보이게 꽂은 책은 똑바로). 읽을 책·중단한 책은 눕혀서 쌓아 둬요.
   const leanOk = state.status === 'all';
-  const rows = []; let cur = [], w = 0;
+  const q = [], lying = [];
   list.forEach(b => {
-    const g = geom(b), extra = leanOk && b.status === '읽는 중' ? leanShift(b, g.H) : 0, need = g.W + extra + 1;
-    if (cur.length && w + need > avail) { rows.push({ items: cur, w }); cur = []; w = 0; }
-    cur.push([b, g]); w += need;
+    if (LYING.has(b.status)) { lying.push([b, geom(b, { noCover: true })]); return; }
+    const g = geom(b), extra = leanOk && b.status === '읽는 중' && g.mode !== 'cover' ? leanShift(b, g.H) : 0;
+    q.push({ kind: 'b', b, g, need: g.W + extra + 1 });
   });
-  if (cur.length) rows.push({ items: cur, w });
+  const piles = [];
+  for (let i = 0; i < lying.length;) {                   // 눕힌 책은 4권(또는 높이 150px)까지 한 더미로
+    const grp = []; let sum = 0;
+    while (i < lying.length && grp.length < 4 && (!grp.length || sum + lying[i][1].W <= 150)) { grp.push(lying[i]); sum += lying[i][1].W; i++; }
+    const mw = Math.max(...grp.map(x => x[1].H));
+    piles.push({ kind: 'p', grp, pw: mw + 14, ph: sum, need: mw + 24 });
+  }
+  // 한 줄에 못 들어가는 책은 뒤에 있는 책 중 들어가는 걸 먼저 꽂고, 그래도 남는 자리는 눕힌 더미로 채워서 오른쪽 여백을 줄여요.
+  const rows = [], pq = piles.slice();
+  while (q.length || pq.length) {
+    const cur = []; let w = 0;
+    for (;;) {
+      let took = false;
+      if (q.length) {
+        let pick = -1;
+        for (let i = 0, n = Math.min(q.length, 6); i < n; i++) if (w + q[i].need <= avail) { pick = i; break; }
+        if (pick < 0 && !cur.length) pick = 0;
+        if (pick >= 0) { const it = q.splice(pick, 1)[0]; cur.push(it); w += it.need; took = true; }
+      }
+      if (!took && pq.length && (w + pq[0].need <= avail || !cur.length)) { const it = pq.shift(); cur.push(it); w += it.need; took = true; }
+      if (!took) break;
+    }
+    rows.push({ items: cur, w });
+  }
   const yr = String(new Date().getFullYear()), doneY = state.books.filter(b => b.status === '완독' && (b.endDate || '').startsWith(yr)).length, reading = state.books.filter(b => b.status === '읽는 중').length;
   const hello = state.status === 'all' && !state.q ? `<p class="hello">올해 <b>${doneY}권</b>을 덮었고, ${reading ? `지금은 <b>${reading}권</b>을 읽고 있어요.` : '지금 읽고 있는 책은 없어요.'}</p>` : '';
   const anim = state.anim; state.anim = false;
   let idx = 0;
-  host.innerHTML = hello + `<div class="shelf wall${anim ? ' anim' : ''}${state.light ? '' : ' dark'}"><button type="button" class="lamp" data-tgl="light" aria-label="조명 켜기/끄기" title="조명 켜기/끄기"><span class="lbar"></span></button>` + rows.map((r, ri) => {
-    const mh = Math.max(...r.items.map(x => x[1].H));
-    const kind = avail - r.w >= 130 ? DECOR[(ri + hashStr(String(r.items[0][0].id))) % DECOR.length] : '';
-    return `<section class="row"><div class="books" style="height:${mh + 30}px">${r.items.map(([b, g]) => spineHTML(b, g, { lean: leanOk, i: idx++ })).join('')}${kind ? decorHTML(kind) : ''}</div><div class="plank"></div></section>`;
+  host.innerHTML = hello + `<div class="shelf wall${anim ? ' anim' : ''}">` + rows.map((r, ri) => {
+    const mh = Math.max(...r.items.map(x => x.kind === 'b' ? x.g.H : x.ph));
+    const first = r.items[0], fid = first.kind === 'b' ? first.b.id : first.grp[0][0].id;
+    const kind = avail - r.w >= 130 ? DECOR[(ri + hashStr(String(fid))) % DECOR.length] : '';
+    const html = r.items.map(it => {
+      if (it.kind === 'b') return spineHTML(it.b, it.g, { lean: leanOk, i: idx++ });
+      let bottom = 0;
+      const inner = it.grp.map(([b, g]) => {
+        const slack = it.pw - g.H, left = slack > 0 ? hashStr(String(b.id) + 'l') % (slack + 1) : 0, rot = ((hashStr(String(b.id) + 'r') % 200) / 100 - 1) * 1.2;
+        const h = lyingHTML(b, g, { left, bottom, rot, i: idx++ }); if (state.pulledId !== b.id) bottom += g.W; return h;
+      }).join('');
+      return `<div class="pile" style="width:${it.pw}px;height:${it.ph}px">${inner}</div>`;
+    }).join('');
+    return `<section class="row"><div class="books" style="height:${mh + 30}px">${html}${kind ? decorHTML(kind) : ''}</div><div class="plank"></div></section>`;
   }).join('') + '</div>';
 }
 const relayoutShelf = debounce(() => { if (state.view === 'shelf') renderShelf(); }, 140);
@@ -1093,11 +1162,19 @@ const CAL_ICON = '<svg width="15" height="15" viewBox="0 0 16 16" fill="none" st
 function dpField(f, label, v) {
   return `<div class="dfield"><span class="dl">${label}</span><button type="button" class="dp-btn ${v ? '' : 'empty'}" data-dp="${f}" aria-haspopup="dialog">${CAL_ICON}<span>${v ? esc(v) : '날짜 선택'}</span></button></div>`;
 }
+function panelHome() {
+  const item = (b, sub) => `<button type="button" class="ph-item" data-open="${esc(b.id)}">${b.cover ? `<img src="${esc(b.cover)}" alt="" referrerpolicy="no-referrer">` : `<span class="ph-nc" style="background:${bgFor(b)}"></span>`}<span class="ph-t"><b>${esc(b.title)}</b><i>${esc(sub)}</i></span></button>`;
+  const day = d => d ? Math.max(1, Math.round((Date.now() - new Date(d + 'T00:00:00')) / 864e5) + 1) : 0;
+  const reading = state.books.filter(b => b.status === '읽는 중');
+  const recent = state.books.filter(b => b.status === '완독' && b.endDate).sort((a, b) => b.endDate.localeCompare(a.endDate)).slice(0, 5);
+  return `<div class="d-top"><button class="btn small" data-d="unpin">패널 접기 ›</button></div>
+  <div class="ph"><h3>읽는 중</h3>${reading.length ? reading.map(b => item(b, b.startDate ? `${day(b.startDate)}일째` : '시작일 없음')).join('') : '<p class="ph-none">읽는 중인 책이 없어요</p>'}
+  ${recent.length ? `<h3>최근에 덮은 책</h3>${recent.map(b => item(b, b.endDate + (b.rating ? ` · ★ ${b.rating.toFixed(1)}` : ''))).join('')}` : ''}</div>`;
+}
 function renderDrawer() {
   const d = state.draft, dr = $('#drawer');
   if (!d) {
-    dr.innerHTML = document.body.classList.contains('pinned') ? `<div class="d-top"><button class="btn small" data-d="unpin">패널 접기 ›</button></div>
-      <div class="d-empty"><svg viewBox="0 0 64 64" width="64" height="64" aria-hidden="true"><rect x="12" y="14" width="10" height="38" rx="3" fill="#CBBFEC"/><rect x="25" y="9" width="10" height="43" rx="3" fill="#F4BFC6"/><rect x="38" y="16" width="10" height="36" rx="3" fill="#C1E2D1" transform="rotate(10 43 52)"/><rect x="8" y="52" width="48" height="4" rx="2" fill="#E3CFB0"/></svg><p class="et">책을 누르면<br>여기에 자세한 기록이 보여요</p><p class="es">책장의 책을 꺼내 보거나, 목록에서 골라보세요.</p></div>` : '';
+    dr.innerHTML = document.body.classList.contains('pinned') ? panelHome() : '';
     return;
   }
   const scrollTop = $('.d-body', dr)?.scrollTop || 0;
@@ -1166,25 +1243,34 @@ function flyBook(id) {
   if (!document.body.classList.contains('pinned') || state.view !== 'shelf' || matchMedia('(prefers-reduced-motion:reduce)').matches) return;
   const b = bookById(id), sp = $(`.spine[data-id="${CSS.escape(id)}"]`), tgt = $('#drawer .d-cover');
   if (!b || !sp || !tgt) return;
-  const r = sp.getBoundingClientRect(), t = tgt.getBoundingClientRect(), w = sp.offsetWidth, h = sp.offsetHeight;
-  const cx = r.left + r.width / 2, cy = r.top + r.height / 2, from = { left: cx - w / 2, top: cy - h / 2, width: w, height: h };
-  const front = sp.cloneNode(true); front.className = sp.className.replace(/\b(sel|lean|lean-r|out|todo)\b/g, '').trim(); front.removeAttribute('data-id'); front.removeAttribute('title');
+  const ly = sp.classList.contains('lying');            // 눕혀 둔 책은 뒤집지 않고 표지가 쓱 올라와요
+  const r = sp.getBoundingClientRect(), t = tgt.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+  const w = ly ? t.width * 0.55 : sp.offsetWidth, h = ly ? t.height * 0.55 : sp.offsetHeight, from = { left: cx - w / 2, top: cy - h / 2, width: w, height: h };
   const bg = bgFor(b);
   const back = b.cover ? `<img src="${esc(b.cover)}" alt="" referrerpolicy="no-referrer">` : `<div class="fl-noc" style="background:${bg};color:${inkFor(bg)}"><b>${esc(b.title)}</b><i>${esc(b.author)}</i></div>`;
-  const el = document.createElement('div'); el.className = 'fly';
+  const el = document.createElement('div'); el.className = 'fly' + (ly ? ' ly' : '');
   el.innerHTML = `<div class="fl-in"><div class="fl-f"></div><div class="fl-b">${back}</div></div>`;
-  $('.fl-f', el).appendChild(front); document.body.appendChild(el);
-  Object.assign(el.style, { left: from.left + 'px', top: from.top + 'px', width: w + 'px', height: h + 'px' });
+  if (!ly) {
+    const front = sp.cloneNode(true); front.className = sp.className.replace(/\b(sel|lean|lean-r|out|todo)\b/g, '').trim(); front.removeAttribute('data-id'); front.removeAttribute('title');
+    $('.fl-f', el).appendChild(front);
+  }
+  document.body.appendChild(el);
+  Object.assign(el.style, px(from));
   state.pulledId = id; sp.classList.add('out'); tgt.style.visibility = 'hidden';
+  if (ly) requestAnimationFrame(() => renderShelf());   // 빠진 자리를 메우며 더미가 내려앉아요
   const to = { left: t.left, top: t.top, width: t.width, height: t.height }, D = 950, ease = 'cubic-bezier(.22,.9,.3,1)';
-  el.animate([{ ...px(from), transform: 'translateY(0) scale(1)' }, { ...px(from), transform: 'translateY(-26px) scale(1.05)', offset: .2 }, { ...px(to), transform: 'translateY(0) scale(1)' }], { duration: D, easing: ease, fill: 'forwards' });
-  $('.fl-in', el).animate([{ transform: 'rotateY(0deg)' }, { transform: 'rotateY(0deg)', offset: .2 }, { transform: 'rotateY(180deg)' }], { duration: D, easing: ease, fill: 'forwards' })
-    .finished.then(() => { tgt.style.visibility = ''; tgt.classList.add('land'); el.remove(); }).catch(() => { tgt.style.visibility = ''; el.remove(); });
+  const k = ly
+    ? [{ ...px(from), transform: 'translateY(0) scale(1)', opacity: 0 }, { ...px(from), transform: 'translateY(-26px) scale(1.05)', opacity: 1, offset: .2 }, { ...px(to), transform: 'translateY(0) scale(1)', opacity: 1 }]
+    : [{ ...px(from), transform: 'translateY(0) scale(1)' }, { ...px(from), transform: 'translateY(-26px) scale(1.05)', offset: .2 }, { ...px(to), transform: 'translateY(0) scale(1)' }];
+  const a1 = el.animate(k, { duration: D, easing: ease, fill: 'forwards' });
+  if (!ly) $('.fl-in', el).animate([{ transform: 'rotateY(0deg)' }, { transform: 'rotateY(0deg)', offset: .2 }, { transform: 'rotateY(180deg)' }], { duration: D, easing: ease, fill: 'forwards' });
+  a1.finished.then(() => { tgt.style.visibility = ''; tgt.classList.add('land'); el.remove(); }).catch(() => { tgt.style.visibility = ''; el.remove(); });
 }
 const px = o => ({ left: o.left + 'px', top: o.top + 'px', width: o.width + 'px', height: o.height + 'px' });
 function restorePulled() {
   const id = state.pulledId; state.pulledId = null; if (!id) return;
-  const el = $(`.spine[data-id="${CSS.escape(id)}"]`); if (!el) return;
+  let el = $(`.spine[data-id="${CSS.escape(id)}"]`); if (!el) return;
+  if (el.classList.contains('lying')) { renderShelf(); el = $(`.spine[data-id="${CSS.escape(id)}"]`); if (!el) return; }
   el.classList.remove('out'); el.classList.add('ret'); setTimeout(() => el.classList.remove('ret'), 700);
 }
 function applyPinned() {
@@ -1200,10 +1286,7 @@ function setPinned(v) {
   state.pinned = v; store.set('readlog.pinned', v); applyPinned();
 }
 function toggleOpt(kind) {
-  if (kind === 'light') {
-    state.light = !state.light; store.set('readlog.light', state.light);
-    $('.wall')?.classList.toggle('dark', !state.light); $$('[data-tgl=light].tgl').forEach(b => b.setAttribute('aria-pressed', String(state.light)));
-  } else if (kind === 'face') {
+  if (kind === 'face') {
     state.faceReading = !state.faceReading; store.set('readlog.face', state.faceReading); renderAll();
   }
 }
@@ -1370,6 +1453,7 @@ function setRatingFromEvent(e) {
 }
 async function drawerClick(e) {
   const d = state.draft, t = e.target.closest('button, #rating');
+  const op = e.target.closest('[data-open]'); if (op) return openBook(op.dataset.open);
   if (t?.dataset.d === 'unpin') return setPinned(false);
   if (t?.dataset.d === 'pin') return setPinned(true);
   if (!d || !t) return;
@@ -1875,7 +1959,6 @@ function bind() {
   // 본문
   const view = $('#view');
   view.addEventListener('click', e => {
-    const tg = e.target.closest('[data-tgl]'); if (tg && tg.classList.contains('lamp')) return toggleOpt('light');
     const sp = e.target.closest('.spine'); if (sp) return openBook(sp.dataset.id, { fly: true });
     const tr = e.target.closest('tbody tr'); if (tr) return openBook(tr.dataset.id);
     const th = e.target.closest('th[data-sort]');
